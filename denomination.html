@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Cash Denomination</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .denom-page {
+            width: min(850px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .denom-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .denom-header h1 {
+            font-size: clamp(36px, 8vw, 60px);
+            margin-top: 12px;
+        }
+
+        .denom-header h1 span {
+            color: #28c7ff;
+        }
+
+        .denom-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .calculator-card {
+            padding: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e5;
+            font-size: 13px;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 52px;
+            padding: 0 15px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 13px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,.25);
+
+            color: white;
+
+            font-size: 17px;
+        }
+
+        .input-group input:focus {
+            border-color: #28c7ff;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            height: 52px;
+            margin-top: 18px;
+
+            border: 0;
+
+            border-radius: 13px;
+
+            background: #28c7ff;
+
+            color: #00121a;
+
+            font-weight: 800;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        .denom-table {
+            width: 100%;
+            margin-top: 20px;
+
+            border-collapse: collapse;
+
+            overflow: hidden;
+
+            border-radius: 16px;
+
+            background:
+                rgba(255,255,255,.025);
+        }
+
+        .denom-table th,
+        .denom-table td {
+            padding: 14px 10px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.06);
+
+            text-align: center;
+        }
+
+        .denom-table th {
+            color: #28c7ff;
+            font-size: 12px;
+        }
+
+        .denom-table td {
+            color: #f4f8ff;
+            font-size: 14px;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+
+            background:
+                rgba(40,199,255,.07);
+
+            border:
+                1px solid
+                rgba(40,199,255,.18);
+
+            border-radius: 18px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 9px 0;
+
+            color: #8e9bb2;
+        }
+
+        .result-row strong {
+            color: white;
+        }
+
+        .error {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+
+            color: #ff9b9b;
+
+            background:
+                rgba(255,70,70,.08);
+
+            border:
+                1px solid
+                rgba(255,70,70,.15);
+
+            border-radius: 12px;
+
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .denom-table th,
+            .denom-table td {
+                padding: 11px 5px;
+                font-size: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="denom-page">
+
+
+        <!-- HEADER -->
+
+        <header class="denom-header">
+
+            <button
+                class="back-btn"
+                onclick="goBack()"
+            >
+                ← Back to Banker Mode
+            </button>
+
+
+            <span class="eyebrow">
+                NEO BANKER TOOL
+            </span>
+
+
+            <h1>
+                Cash <span>Denomination</span>
+            </h1>
+
+
+            <p>
+                Enter the total cash amount and NEO
+                will calculate the available notes.
+            </p>
+
+        </header>
+
+
+        <!-- CALCULATOR -->
+
+        <section class="calculator-card">
+
+
+            <div class="input-group">
+
+                <label for="amount">
+                    Total Cash Amount (₹)
+                </label>
+
+                <input
+                    id="amount"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    placeholder="Example: 7274"
+                >
+
+            </div>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculateDenomination()"
+            >
+                Calculate Denomination
+            </button>
+
+
+            <div
+                id="error"
+                class="error"
+            ></div>
+
+
+            <div id="results">
+
+
+                <table class="denom-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>NOTE</th>
+                            <th>COUNT</th>
+                            <th>VALUE</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="denomBody">
+
+                    </tbody>
+
+                </table>
+
+
+                <div class="result-box">
+
+                    <div class="result-row">
+                        <span>Total Notes</span>
+                        <strong id="totalNotes">0</strong>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Total Calculated</span>
+                        <strong id="totalCalculated">₹0</strong>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Remaining</span>
+                        <strong id="remaining">₹0</strong>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script>
+
+        const denominations = [
+            500,
+            200,
+            100,
+            50,
+            20,
+            10
+        ];
+
+
+        function formatRupees(value) {
+
+            return new Intl.NumberFormat(
+                "en-IN",
+                {
+                    style: "currency",
+                    currency: "INR",
+                    maximumFractionDigits: 0
+                }
+            ).format(value);
+
+        }
+
+
+        function calculateDenomination() {
+
+            const input =
+                document.getElementById(
+                    "amount"
+                );
+
+
+            const error =
+                document.getElementById(
+                    "error"
+                );
+
+
+            const amount =
+                Number(input.value);
+
+
+            error.style.display = "none";
+
+
+            if (
+                !amount ||
+                amount <= 0 ||
+                !Number.isInteger(amount)
+            ) {
+
+                error.textContent =
+                    "Please enter a valid whole-number cash amount.";
+
+                error.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            let remaining =
+                amount;
+
+
+            let totalNotes =
+                0;
+
+
+            let totalCalculated =
+                0;
+
+
+            const body =
+                document.getElementById(
+                    "denomBody"
+                );
+
+
+            body.innerHTML = "";
+
+
+            denominations.forEach(
+                (note) => {
+
+                    const count =
+                        Math.floor(
+                            remaining / note
+                        );
+
+
+                    const value =
+                        count * note;
+
+
+                    remaining -= value;
+
+
+                    totalNotes += count;
+
+
+                    totalCalculated += value;
+
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+                        <td>
+                            ${formatRupees(note)}
+                        </td>
+
+                        <td>
+                            ${count}
+                        </td>
+
+                        <td>
+                            ${formatRupees(value)}
+                        </td>
+                    `;
+
+
+                    body.appendChild(row);
+
+                }
+            );
+
+
+            document.getElementById(
+                "totalNotes"
+            ).textContent =
+                totalNotes;
+
+
+            document.getElementById(
+                "totalCalculated"
+            ).textContent =
+                formatRupees(
+                    totalCalculated
+                );
+
+
+            document.getElementById(
+                "remaining"
+            ).textContent =
+                formatRupees(
+                    remaining
+                );
+
+        }
+
+
+        function goBack() {
+
+            window.location.href =
+                "banker.html";
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
