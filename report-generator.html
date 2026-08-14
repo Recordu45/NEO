@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Report Generator</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .report-page {
+            width: min(950px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .report-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .report-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .report-header h1 span {
+            color: #28c7ff;
+        }
+
+        .report-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .report-card {
+            padding: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 24px;
+
+            margin-bottom: 20px;
+        }
+
+        .report-card h2 {
+            margin-bottom: 18px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e5;
+            font-size: 13px;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 13px 14px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,.25);
+
+            color: white;
+
+            font-size: 14px;
+        }
+
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-group select option {
+            color: black;
+        }
+
+        .generate-btn {
+            width: 100%;
+            height: 52px;
+
+            border: 0;
+
+            border-radius: 13px;
+
+            background: #28c7ff;
+
+            color: #00121a;
+
+            font-weight: 800;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        .report-output {
+            display: none;
+        }
+
+        .report-output.active {
+            display: block;
+        }
+
+        .report-document {
+            padding: 25px;
+
+            background: #ffffff;
+
+            color: #111827;
+
+            border-radius: 16px;
+
+            line-height: 1.7;
+        }
+
+        .report-document h2 {
+            margin-bottom: 5px;
+        }
+
+        .report-meta {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .report-section {
+            margin-top: 20px;
+        }
+
+        .report-section h3 {
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 11px 15px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.2);
+
+            border-radius: 10px;
+
+            background:
+                rgba(40,199,255,.08);
+
+            color: #28c7ff;
+
+            cursor: pointer;
+        }
+
+        @media print {
+
+            body * {
+                visibility: hidden;
+            }
+
+            .report-document,
+            .report-document * {
+                visibility: visible;
+            }
+
+            .report-document {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                border-radius: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="report-page">
+
+
+    <!-- HEADER -->
+
+    <header class="report-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Banker Mode
+        </button>
+
+
+        <span class="eyebrow">
+            NEO BANKER TOOL
+        </span>
+
+
+        <h1>
+            Report <span>Generator</span>
+        </h1>
+
+
+        <p>
+            Create a structured branch report
+            from your basic inputs and notes.
+        </p>
+
+    </header>
+
+
+    <!-- INPUT -->
+
+    <section class="report-card">
+
+        <h2>
+            Report Details
+        </h2>
+
+
+        <div class="input-group">
+
+            <label for="reportType">
+                Report Type
+            </label>
+
+            <select id="reportType">
+
+                <option value="Daily Branch Report">
+                    Daily Branch Report
+                </option>
+
+                <option value="Cash Report">
+                    Cash Report
+                </option>
+
+                <option value="Collection Report">
+                    Collection Report
+                </option>
+
+                <option value="Loan Report">
+                    Loan Report
+                </option>
+
+                <option value="Customer Follow-up Report">
+                    Customer Follow-up Report
+                </option>
+
+                <option value="General Report">
+                    General Report
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="branchName">
+                Branch / Department
+            </label>
+
+            <input
+                id="branchName"
+                placeholder="Example: Agiaon Branch"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="reportDate">
+                Report Date
+            </label>
+
+            <input
+                id="reportDate"
+                type="date"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="preparedBy">
+                Prepared By
+            </label>
+
+            <input
+                id="preparedBy"
+                placeholder="Name / Designation"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="summary">
+                Summary
+            </label>
+
+            <textarea
+                id="summary"
+                placeholder="Enter the main summary of today's work..."
+            ></textarea>
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="activities">
+                Activities / Details
+            </label>
+
+            <textarea
+                id="activities"
+                placeholder="Enter activities, customer follow-ups, collections, loan work, cash work, pending items etc."
+            ></textarea>
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="pending">
+                Pending / Action Required
+            </label>
+
+            <textarea
+                id="pending"
+                placeholder="Enter pending work or next actions..."
+            ></textarea>
+
+        </div>
+
+
+        <button
+            class="generate-btn"
+            onclick="generateReport()"
+        >
+            Generate Report
+        </button>
+
+    </section>
+
+
+    <!-- OUTPUT -->
+
+    <section
+        id="reportOutput"
+        class="report-output"
+    >
+
+        <div
+            id="reportDocument"
+            class="report-document"
+        >
+
+        </div>
+
+
+        <div class="report-actions">
+
+            <button
+                class="action-btn"
+                onclick="copyReport()"
+            >
+                Copy Report
+            </button>
+
+
+            <button
+                class="action-btn"
+                onclick="printReport()"
+            >
+                Print / Save PDF
+            </button>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+
+    /* ==============================
+       SET TODAY
+    ============================== */
+
+    function setToday() {
+
+        const today =
+            new Date();
+
+        const year =
+            today.getFullYear();
+
+        const month =
+            String(
+                today.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                today.getDate()
+            ).padStart(2, "0");
+
+        document.getElementById(
+            "reportDate"
+        ).value =
+            `${year}-${month}-${day}`;
+
+    }
+
+
+    /* ==============================
+       ESCAPE HTML
+    ============================== */
+
+    function escapeHTML(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
+
+
+    /* ==============================
+       FORMAT TEXT
+    ============================== */
+
+    function formatText(text) {
+
+        return escapeHTML(text)
+            .replace(/\n/g, "<br>");
+
+    }
+
+
+    /* ==============================
+       GENERATE REPORT
+    ============================== */
+
+    function generateReport() {
+
+        const type =
+            document.getElementById(
+                "reportType"
+            ).value;
+
+        const branch =
+            document.getElementById(
+                "branchName"
+            ).value.trim();
+
+        const date =
+            document.getElementById(
+                "reportDate"
+            ).value;
+
+        const preparedBy =
+            document.getElementById(
+                "preparedBy"
+            ).value.trim();
+
+        const summary =
+            document.getElementById(
+                "summary"
+            ).value.trim();
+
+        const activities =
+            document.getElementById(
+                "activities"
+            ).value.trim();
+
+        const pending =
+            document.getElementById(
+                "pending"
+            ).value.trim();
+
+
+        if (!branch) {
+
+            alert(
+                "Please enter branch or department."
+            );
+
+            return;
+
+        }
+
+
+        if (!summary) {
+
+            alert(
+                "Please enter the report summary."
+            );
+
+            return;
+
+        }
+
+
+        const formattedDate =
+            date
+                ? new Date(
+                    date + "T00:00:00"
+                ).toLocaleDateString(
+                    "en-IN",
+                    {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
+                    }
+                )
+                : "Not specified";
+
+
+        const documentHTML = `
+
+            <h2>
+                ${escapeHTML(type)}
+            </h2>
+
+            <div class="report-meta">
+
+                Branch:
+                <strong>
+                    ${escapeHTML(branch)}
+                </strong>
+
+                <br>
+
+                Date:
+                <strong>
+                    ${escapeHTML(formattedDate)}
+                </strong>
+
+                <br>
+
+                Prepared By:
+                <strong>
+                    ${escapeHTML(
+                        preparedBy ||
+                        "Not specified"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <h3>
+                    1. Summary
+                </h3>
+
+                <p>
+                    ${formatText(summary)}
+                </p>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <h3>
+                    2. Activities / Details
+                </h3>
+
+                <p>
+                    ${formatText(
+                        activities ||
+                        "No activities entered."
+                    )}
+                </p>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <h3>
+                    3. Pending / Action Required
+                </h3>
+
+                <p>
+                    ${formatText(
+                        pending ||
+                        "No pending items entered."
+                    )}
+                </p>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <h3>
+                    4. Remarks
+                </h3>
+
+                <p>
+                    Report generated using NEO
+                    Banker Mode.
+                </p>
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "reportDocument"
+        ).innerHTML =
+            documentHTML;
+
+
+        document.getElementById(
+            "reportOutput"
+        ).classList.add(
+            "active"
+        );
+
+
+        document
+            .getElementById(
+                "reportOutput"
+            )
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    }
+
+
+    /* ==============================
+       COPY REPORT
+    ============================== */
+
+    function copyReport() {
+
+        const text =
+            document.getElementById(
+                "reportDocument"
+            ).innerText;
+
+
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+
+                alert(
+                    "Report copied successfully."
+                );
+
+            })
+            .catch(() => {
+
+                alert(
+                    "Copy failed. Please select and copy the report manually."
+                );
+
+            });
+
+    }
+
+
+    /* ==============================
+       PRINT
+    ============================== */
+
+    function printReport() {
+
+        window.print();
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "banker.html";
+
+    }
+
+
+    /* ==============================
+       INIT
+    ============================== */
+
+    setToday();
+
+
+</script>
+
+
+</body>
+
+</html>
