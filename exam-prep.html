@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Study Timer</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .timer-page {
+            width: min(850px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .timer-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .timer-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .timer-header h1 span {
+            color: #28c7ff;
+        }
+
+        .timer-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .timer-card {
+            padding: 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 26px;
+
+            text-align: center;
+        }
+
+        .mode-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 10px 15px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 10px;
+
+            background:
+                rgba(40,199,255,.06);
+
+            color: #8e9bb2;
+
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: #28c7ff;
+            color: #00121a;
+            border-color: #28c7ff;
+            font-weight: 800;
+        }
+
+        .timer-circle {
+            width: min(280px, 75vw);
+            height: min(280px, 75vw);
+
+            margin: 35px auto;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border:
+                8px solid
+                rgba(40,199,255,.18);
+
+            box-shadow:
+                0 0 45px
+                rgba(40,199,255,.08);
+        }
+
+        #time {
+            font-size: clamp(48px, 12vw, 78px);
+            font-weight: 800;
+            color: #28c7ff;
+            letter-spacing: 2px;
+        }
+
+        .session-name {
+            color: #8e9bb2;
+            font-size: 13px;
+            margin-top: -20px;
+        }
+
+        .timer-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.2);
+
+            border-radius: 11px;
+
+            background:
+                rgba(40,199,255,.08);
+
+            color: #28c7ff;
+
+            cursor: pointer;
+        }
+
+        .action-btn.primary {
+            background: #28c7ff;
+            color: #00121a;
+            border-color: #28c7ff;
+            font-weight: 800;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            padding: 18px;
+
+            background:
+                rgba(13,21,38,.78);
+
+            border:
+                1px solid
+                rgba(80,180,255,.15);
+
+            border-radius: 17px;
+        }
+
+        .stat span {
+            display: block;
+            color: #8e9bb2;
+            font-size: 11px;
+        }
+
+        .stat strong {
+            display: block;
+            margin-top: 8px;
+            color: #28c7ff;
+            font-size: 22px;
+        }
+
+        .subject-box {
+            margin-top: 20px;
+        }
+
+        .subject-box input {
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 12px;
+
+            background:
+                rgba(13,21,38,.78);
+
+            color: white;
+
+            outline: none;
+        }
+
+        @media (max-width: 600px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-card {
+                padding: 22px 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="timer-page">
+
+
+    <!-- HEADER -->
+
+    <header class="timer-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Student Mode
+        </button>
+
+        <span class="eyebrow">
+            NEO STUDENT TOOL
+        </span>
+
+        <h1>
+            Study <span>Timer</span>
+        </h1>
+
+        <p>
+            Focus on your studies using
+            simple Pomodoro-style sessions.
+        </p>
+
+    </header>
+
+
+    <!-- TIMER -->
+
+    <section class="timer-card">
+
+
+        <!-- MODES -->
+
+        <div class="mode-buttons">
+
+            <button
+                class="mode-btn active"
+                onclick="setMode('study')"
+                id="studyMode"
+            >
+                Study 25m
+            </button>
+
+            <button
+                class="mode-btn"
+                onclick="setMode('short')"
+                id="shortMode"
+            >
+                Short Break 5m
+            </button>
+
+            <button
+                class="mode-btn"
+                onclick="setMode('long')"
+                id="longMode"
+            >
+                Long Break 15m
+            </button>
+
+        </div>
+
+
+        <!-- SUBJECT -->
+
+        <div class="subject-box">
+
+            <input
+                id="subject"
+                type="text"
+                placeholder="What are you studying?"
+            >
+
+        </div>
+
+
+        <!-- TIMER -->
+
+        <div class="timer-circle">
+
+            <div id="time">
+                25:00
+            </div>
+
+        </div>
+
+
+        <div
+            id="sessionName"
+            class="session-name"
+        >
+            Study Session
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="timer-actions">
+
+            <button
+                id="startBtn"
+                class="action-btn primary"
+                onclick="toggleTimer()"
+            >
+                Start
+            </button>
+
+            <button
+                class="action-btn"
+                onclick="resetTimer()"
+            >
+                Reset
+            </button>
+
+            <button
+                class="action-btn"
+                onclick="skipTimer()"
+            >
+                Skip
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <span>
+                SESSIONS
+            </span>
+
+            <strong id="sessions">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span>
+                STUDY MINUTES
+            </span>
+
+            <strong id="minutes">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span>
+                TODAY
+            </span>
+
+            <strong id="today">
+                0
+            </strong>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+
+    const STORAGE_KEY =
+        "neo_study_timer_stats";
+
+
+    const modes = {
+
+        study: {
+            seconds: 25 * 60,
+            name: "Study Session"
+        },
+
+        short: {
+            seconds: 5 * 60,
+            name: "Short Break"
+        },
+
+        long: {
+            seconds: 15 * 60,
+            name: "Long Break"
+        }
+
+    };
+
+
+    let currentMode =
+        "study";
+
+
+    let remaining =
+        modes.study.seconds;
+
+
+    let timer =
+        null;
+
+
+    let running =
+        false;
+
+
+    let stats =
+        loadStats();
+
+
+    /* ==============================
+       LOAD STATS
+    ============================== */
+
+    function loadStats() {
+
+        try {
+
+            return JSON.parse(
+                localStorage.getItem(
+                    STORAGE_KEY
+                )
+            ) || {
+                sessions: 0,
+                minutes: 0,
+                today: 0,
+                date: todayKey()
+            };
+
+        } catch {
+
+            return {
+                sessions: 0,
+                minutes: 0,
+                today: 0,
+                date: todayKey()
+            };
+
+        }
+
+    }
+
+
+    /* ==============================
+       TODAY KEY
+    ============================== */
+
+    function todayKey() {
+
+        return new Date()
+            .toISOString()
+            .slice(0, 10);
+
+    }
+
+
+    /* ==============================
+       SAVE STATS
+    ============================== */
+
+    function saveStats() {
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(stats)
+        );
+
+    }
+
+
+    /* ==============================
+       CHECK DAY
+    ============================== */
+
+    function checkDay() {
+
+        const today =
+            todayKey();
+
+
+        if (
+            stats.date !== today
+        ) {
+
+            stats.today =
+                0;
+
+            stats.date =
+                today;
+
+            saveStats();
+
+        }
+
+    }
+
+
+    /* ==============================
+       SET MODE
+    ============================== */
+
+    function setMode(mode) {
+
+        if (running) {
+
+            const confirmChange =
+                confirm(
+                    "Timer is running. Change session?"
+                );
+
+
+            if (!confirmChange) {
+                return;
+            }
+
+        }
+
+
+        stopTimer();
+
+
+        currentMode =
+            mode;
+
+
+        remaining =
+            modes[mode].seconds;
+
+
+        document.querySelectorAll(
+            ".mode-btn"
+        ).forEach(
+            btn =>
+                btn.classList.remove(
+                    "active"
+                )
+        );
+
+
+        document.getElementById(
+            mode + "Mode"
+        ).classList.add(
+            "active"
+        );
+
+
+        document.getElementById(
+            "sessionName"
+        ).textContent =
+            modes[mode].name;
+
+
+        updateDisplay();
+
+    }
+
+
+    /* ==============================
+       TOGGLE TIMER
+    ============================== */
+
+    function toggleTimer() {
+
+        if (running) {
+
+            stopTimer();
+
+            return;
+
+        }
+
+
+        running =
+            true;
+
+
+        document.getElementById(
+            "startBtn"
+        ).textContent =
+            "Pause";
+
+
+        timer =
+            setInterval(
+                tick,
+                1000
+            );
+
+    }
+
+
+    /* ==============================
+       TICK
+    ============================== */
+
+    function tick() {
+
+        if (
+            remaining <= 0
+        ) {
+
+            completeSession();
+
+            return;
+
+        }
+
+
+        remaining--;
+
+        updateDisplay();
+
+    }
+
+
+    /* ==============================
+       COMPLETE SESSION
+    ============================== */
+
+    function completeSession() {
+
+        stopTimer();
+
+
+        if (
+            currentMode ===
+            "study"
+        ) {
+
+            stats.sessions++;
+
+            stats.minutes += 25;
+
+            stats.today += 25;
+
+            saveStats();
+
+            updateStats();
+
+            alert(
+                "Study session complete. Great work!"
+            );
+
+        } else {
+
+            alert(
+                "Break complete. Ready for the next session?"
+            );
+
+        }
+
+
+        resetTimer();
+
+    }
+
+
+    /* ==============================
+       STOP
+    ============================== */
+
+    function stopTimer() {
+
+        clearInterval(
+            timer
+        );
+
+
+        timer =
+            null;
+
+
+        running =
+            false;
+
+
+        document.getElementById(
+            "startBtn"
+        ).textContent =
+            "Start";
+
+    }
+
+
+    /* ==============================
+       RESET
+    ============================== */
+
+    function resetTimer() {
+
+        stopTimer();
+
+
+        remaining =
+            modes[
+                currentMode
+            ].seconds;
+
+
+        updateDisplay();
+
+    }
+
+
+    /* ==============================
+       SKIP
+    ============================== */
+
+    function skipTimer() {
+
+        stopTimer();
+
+
+        if (
+            currentMode ===
+            "study"
+        ) {
+
+            setMode("short");
+
+        } else {
+
+            setMode("study");
+
+        }
+
+    }
+
+
+    /* ==============================
+       DISPLAY
+    ============================== */
+
+    function updateDisplay() {
+
+        const minutes =
+            Math.floor(
+                remaining / 60
+            );
+
+
+        const seconds =
+            remaining % 60;
+
+
+        document.getElementById(
+            "time"
+        ).textContent =
+
+            String(minutes)
+                .padStart(2, "0")
+
+            +
+
+            ":" +
+
+            String(seconds)
+                .padStart(2, "0");
+
+    }
+
+
+    /* ==============================
+       UPDATE STATS
+    ============================== */
+
+    function updateStats() {
+
+        checkDay();
+
+
+        document.getElementById(
+            "sessions"
+        ).textContent =
+            stats.sessions;
+
+
+        document.getElementById(
+            "minutes"
+        ).textContent =
+            stats.minutes;
+
+
+        document.getElementById(
+            "today"
+        ).textContent =
+            stats.today;
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "student.html";
+
+    }
+
+
+    /* ==============================
+       INIT
+    ============================== */
+
+    checkDay();
+
+    updateDisplay();
+
+    updateStats();
+
+
+</script>
+
+
+</body>
+
+</html>
