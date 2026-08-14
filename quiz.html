@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Quiz Generator</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .quiz-page {
+            width: min(950px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .quiz-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .quiz-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .quiz-header h1 span {
+            color: #28c7ff;
+        }
+
+        .quiz-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .card {
+            padding: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 22px;
+
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e5;
+            font-size: 13px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,.25);
+
+            color: white;
+
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        select option {
+            color: black;
+        }
+
+        .btn {
+            padding: 12px 17px;
+
+            border: 1px solid
+                rgba(80,180,255,.2);
+
+            border-radius: 11px;
+
+            background:
+                rgba(40,199,255,.08);
+
+            color: #28c7ff;
+
+            cursor: pointer;
+        }
+
+        .btn.primary {
+            background: #28c7ff;
+            color: #00121a;
+            font-weight: 800;
+            border-color: #28c7ff;
+        }
+
+        .btn.danger {
+            color: #ff8d8d;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .question {
+            padding: 20px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.14);
+
+            border-radius: 17px;
+
+            margin-bottom: 15px;
+
+            background:
+                rgba(13,21,38,.6);
+        }
+
+        .question h3 {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            margin-top: 14px;
+            display: grid;
+            gap: 9px;
+        }
+
+        .option {
+            padding: 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            color: #cbd5e5;
+
+            transition: .2s;
+        }
+
+        .option:hover {
+            border-color: #28c7ff;
+        }
+
+        .option.correct {
+            border-color: #42e6a4;
+            background: rgba(66,230,164,.08);
+        }
+
+        .option.wrong {
+            border-color: #ff7777;
+            background: rgba(255,119,119,.08);
+        }
+
+        .result {
+            display: none;
+
+            padding: 25px;
+
+            text-align: center;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 20px;
+        }
+
+        .result.active {
+            display: block;
+        }
+
+        .score {
+            font-size: 42px;
+            color: #28c7ff;
+            font-weight: 800;
+        }
+
+        .empty {
+            color: #8e9bb2;
+            text-align: center;
+            padding: 25px;
+        }
+
+        @media (max-width: 650px) {
+
+            .quiz-page {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="quiz-page">
+
+
+    <!-- HEADER -->
+
+    <header class="quiz-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Student Mode
+        </button>
+
+        <span class="eyebrow">
+            NEO STUDENT TOOL
+        </span>
+
+        <h1>
+            Quiz <span>Generator</span>
+        </h1>
+
+        <p>
+            Create a quick practice quiz and
+            test your knowledge.
+        </p>
+
+    </header>
+
+
+    <!-- GENERATOR -->
+
+    <section class="card">
+
+        <div class="input-group">
+
+            <label>
+                Subject
+            </label>
+
+            <input
+                id="subject"
+                placeholder="Example: History"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Number of Questions
+            </label>
+
+            <select id="questionCount">
+
+                <option value="5">
+                    5 Questions
+                </option>
+
+                <option value="10">
+                    10 Questions
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Quiz Questions
+            </label>
+
+            <textarea
+                id="questionInput"
+                placeholder="Enter questions manually, one per line. Example: Capital of India?"
+            ></textarea>
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Answers
+
+                <small>
+                    Enter the correct answer for each question,
+                    one per line.
+                </small>
+
+            </label>
+
+            <textarea
+                id="answerInput"
+                placeholder="Example: New Delhi"
+            ></textarea>
+
+        </div>
+
+
+        <button
+            class="btn primary"
+            onclick="createQuiz()"
+        >
+            Create Quiz
+        </button>
+
+    </section>
+
+
+    <!-- QUIZ -->
+
+    <section
+        id="quizArea"
+        class="card"
+        style="display:none;"
+    >
+
+        <h2 id="quizTitle">
+            Practice Quiz
+        </h2>
+
+        <div
+            id="questions"
+            style="margin-top:20px;"
+        ></div>
+
+        <div class="actions">
+
+            <button
+                class="btn primary"
+                onclick="submitQuiz()"
+            >
+                Submit Quiz
+            </button>
+
+            <button
+                class="btn"
+                onclick="resetQuiz()"
+            >
+                New Quiz
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESULT -->
+
+    <section
+        id="result"
+        class="result"
+    >
+
+        <div class="score">
+            <span id="score">
+                0
+            </span>
+        </div>
+
+        <p id="resultText">
+            Quiz completed.
+        </p>
+
+        <br>
+
+        <button
+            class="btn primary"
+            onclick="resetQuiz()"
+        >
+            Try Again
+        </button>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+
+    let quizData = [];
+
+
+    let submitted =
+        false;
+
+
+    /* ==============================
+       CREATE QUIZ
+    ============================== */
+
+    function createQuiz() {
+
+        const subject =
+            document.getElementById(
+                "subject"
+            ).value.trim();
+
+
+        const questionText =
+            document.getElementById(
+                "questionInput"
+            ).value.trim();
+
+
+        const answerText =
+            document.getElementById(
+                "answerInput"
+            ).value.trim();
+
+
+        if (!subject) {
+
+            alert(
+                "Please enter a subject."
+            );
+
+            return;
+
+        }
+
+
+        if (!questionText) {
+
+            alert(
+                "Please enter at least one question."
+            );
+
+            return;
+
+        }
+
+
+        if (!answerText) {
+
+            alert(
+                "Please enter the correct answers."
+            );
+
+            return;
+
+        }
+
+
+        const questions =
+            questionText
+                .split("\n")
+                .map(
+                    item =>
+                        item.trim()
+                )
+                .filter(Boolean);
+
+
+        const answers =
+            answerText
+                .split("\n")
+                .map(
+                    item =>
+                        item.trim()
+                )
+                .filter(Boolean);
+
+
+        if (
+            questions.length !==
+            answers.length
+        ) {
+
+            alert(
+                "Questions aur answers ki number same honi chahiye."
+            );
+
+            return;
+
+        }
+
+
+        const count =
+            Math.min(
+                parseInt(
+                    document.getElementById(
+                        "questionCount"
+                    ).value
+                ),
+                questions.length
+            );
+
+
+        quizData =
+            questions
+                .slice(0, count)
+                .map(
+                    (question, index) => ({
+
+                        question:
+                            question,
+
+                        answer:
+                            answers[index]
+
+                    })
+                );
+
+
+        submitted =
+            false;
+
+
+        renderQuiz(subject);
+
+    }
+
+
+    /* ==============================
+       RENDER QUIZ
+    ============================== */
+
+    function renderQuiz(subject) {
+
+        document.getElementById(
+            "quizTitle"
+        ).textContent =
+            subject +
+            " Practice Quiz";
+
+
+        const container =
+            document.getElementById(
+                "questions"
+            );
+
+
+        container.innerHTML =
+            quizData
+                .map(
+                    (item, index) => `
+
+                        <div
+                            class="question"
+                        >
+
+                            <h3>
+                                ${index + 1}.
+                                ${escapeHTML(
+                                    item.question
+                                )}
+                            </h3>
+
+                            <div
+                                class="options"
+                            >
+
+                                <input
+                                    id="answer-${index}"
+                                    placeholder="Type your answer..."
+                                >
+
+                            </div>
+
+                        </div>
+
+                    `
+                )
+                .join("");
+
+
+        document.getElementById(
+            "quizArea"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "result"
+        ).classList.remove(
+            "active"
+        );
+
+
+        document.getElementById(
+            "quizArea"
+        ).scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* ==============================
+       SUBMIT
+    ============================== */
+
+    function submitQuiz() {
+
+        if (submitted) {
+            return;
+        }
+
+
+        let score =
+            0;
+
+
+        quizData.forEach(
+            (item, index) => {
+
+                const input =
+                    document.getElementById(
+                        "answer-" + index
+                    );
+
+
+                if (!input) {
+                    return;
+                }
+
+
+                const userAnswer =
+                    input.value
+                        .trim()
+                        .toLowerCase();
+
+
+                const correctAnswer =
+                    item.answer
+                        .trim()
+                        .toLowerCase();
+
+
+                if (
+                    userAnswer ===
+                    correctAnswer
+                ) {
+
+                    score++;
+
+                    input.style.borderColor =
+                        "#42e6a4";
+
+                } else {
+
+                    input.style.borderColor =
+                        "#ff7777";
+
+                }
+
+
+                input.disabled =
+                    true;
+
+            }
+        );
+
+
+        submitted =
+            true;
+
+
+        const percentage =
+            Math.round(
+                (
+                    score /
+                    quizData.length
+                ) * 100
+            );
+
+
+        document.getElementById(
+            "score"
+        ).textContent =
+            score +
+            " / " +
+            quizData.length;
+
+
+        document.getElementById(
+            "resultText"
+        ).textContent =
+            "Your score is " +
+            percentage +
+            "%. Keep practicing!";
+
+
+        document.getElementById(
+            "result"
+        ).classList.add(
+            "active"
+        );
+
+
+        document.getElementById(
+            "result"
+        ).scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* ==============================
+       RESET
+    ============================== */
+
+    function resetQuiz() {
+
+        quizData = [];
+
+        submitted =
+            false;
+
+
+        document.getElementById(
+            "quizArea"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "result"
+        ).classList.remove(
+            "active"
+        );
+
+
+        document.getElementById(
+            "questionInput"
+        ).value = "";
+
+
+        document.getElementById(
+            "answerInput"
+        ).value = "";
+
+    }
+
+
+    /* ==============================
+       ESCAPE
+    ============================== */
+
+    function escapeHTML(text) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "student.html";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
