@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050811">
+<title>NEO | AI Study Assistant</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.ai-page{width:min(950px,100%);margin:auto;padding:25px 18px 110px}
+.header{padding:30px 0}
+.back-btn{border:1px solid rgba(80,180,255,.18);background:rgba(13,21,38,.78);color:white;padding:11px 15px;border-radius:12px;margin-bottom:25px;cursor:pointer}
+.header h1{font-size:clamp(38px,8vw,62px);margin-top:12px}
+.header h1 span{color:#28c7ff}
+.header p{color:#8e9bb2;line-height:1.6;margin-top:12px}
+.card{padding:24px;background:linear-gradient(135deg,rgba(18,31,54,.95),rgba(8,13,25,.95));border:1px solid rgba(80,180,255,.18);border-radius:22px;margin-bottom:20px}
+textarea{width:100%;min-height:150px;padding:15px;border:1px solid rgba(80,180,255,.18);border-radius:14px;outline:none;background:rgba(0,0,0,.25);color:white;font-size:14px;line-height:1.6;resize:vertical}
+select{width:100%;padding:13px;border:1px solid rgba(80,180,255,.18);border-radius:12px;background:rgba(0,0,0,.25);color:white}
+select option{color:black}
+.btn{padding:11px 16px;border:1px solid rgba(80,180,255,.2);border-radius:10px;background:rgba(40,199,255,.08);color:#28c7ff;cursor:pointer}
+.btn.primary{background:#28c7ff;color:#00121a;border-color:#28c7ff;font-weight:800}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.answer{display:none}
+.answer.active{display:block}
+.answer-box{padding:20px;background:rgba(13,21,38,.75);border-radius:16px;border:1px solid rgba(80,180,255,.14);line-height:1.7;color:#dbe7f5;white-space:pre-wrap}
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.quick{padding:16px;background:rgba(13,21,38,.7);border:1px solid rgba(80,180,255,.14);border-radius:15px;color:#cbd5e5;cursor:pointer;text-align:left}
+.quick strong{display:block;color:#28c7ff;margin-bottom:6px}
+.quick span{font-size:12px;color:#8e9bb2}
+.history{display:grid;gap:10px}
+.history-item{padding:14px;background:rgba(13,21,38,.65);border:1px solid rgba(80,180,255,.12);border-radius:13px}
+.history-item strong{color:#28c7ff}
+.history-item p{color:#8e9bb2;font-size:12px;margin-top:5px}
+.empty{text-align:center;color:#64748b;padding:20px}
+@media(max-width:600px){.quick-grid{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+<div class="ai-page">
+
+<header class="header">
+<button class="back-btn" onclick="goBack()">← Back to Student Mode</button>
+<span class="eyebrow">NEO STUDENT TOOL</span>
+<h1>AI Study <span>Assistant</span></h1>
+<p>Ask a study question and get a structured learning response. This version works without an external API.</p>
+</header>
+
+<section class="card">
+<h2>Ask NEO</h2>
+<br>
+
+<label style="display:block;color:#cbd5e5;font-size:13px;margin-bottom:8px">
+What do you want to learn?
+</label>
+
+<textarea id="question" placeholder="Example: Explain photosynthesis in simple words..."></textarea>
+
+<div style="margin-top:14px">
+<label style="display:block;color:#cbd5e5;font-size:13px;margin-bottom:8px">
+Answer Style
+</label>
+
+<select id="style">
+<option value="simple">Simple Explanation</option>
+<option value="exam">Exam Answer</option>
+<option value="points">Important Points</option>
+<option value="revision">Quick Revision</option>
+</select>
+</div>
+
+<div class="actions">
+<button class="btn primary" onclick="askNEO()">Ask NEO</button>
+<button class="btn" onclick="clearQuestion()">Clear</button>
+</div>
+</section>
+
+<section id="answer" class="card answer">
+<h2>NEO Response</h2>
+<br>
+<div id="answerBox" class="answer-box"></div>
+
+<div class="actions">
+<button class="btn" onclick="copyAnswer()">Copy Answer</button>
+</div>
+</section>
+
+<section class="card">
+<h2>Quick Study Prompts</h2>
+<br>
+
+<div class="quick-grid">
+
+<button class="quick" onclick="usePrompt('Explain this topic in very simple language.')">
+<strong>Explain Simply</strong>
+<span>Understand a difficult topic.</span>
+</button>
+
+<button class="quick" onclick="usePrompt('Give me important points for exam preparation.')">
+<strong>Exam Points</strong>
+<span>Get short revision points.</span>
+</button>
+
+<button class="quick" onclick="usePrompt('Create 5 practice questions about this topic.')">
+<strong>Practice Questions</strong>
+<span>Test your knowledge.</span>
+</button>
+
+<button class="quick" onclick="usePrompt('Give me a quick revision summary of this topic.')">
+<strong>Quick Revision</strong>
+<span>Revise faster.</span>
+</button>
+
+</div>
+</section>
+
+<section class="card">
+<h2>Recent Questions</h2>
+<br>
+<div id="history" class="history"></div>
+</section>
+
+</div>
+
+<script>
+const STORAGE_KEY="neo_ai_study_history";
+
+function askNEO(){
+    const question=document.getElementById("question").value.trim();
+    const style=document.getElementById("style").value;
+
+    if(!question){
+        alert("Please enter a study question.");
+        return;
+    }
+
+    const response=generateResponse(question,style);
+
+    document.getElementById("answerBox").textContent=response;
+    document.getElementById("answer").classList.add("active");
+
+    saveHistory(question,response);
+
+    document.getElementById("answer").scrollIntoView({
+        behavior:"smooth"
+    });
+}
+
+function generateResponse(question,style){
+    const q=question.toLowerCase();
+
+    if(q.includes("photosynthesis")){
+        if(style==="exam"){
+            return "Photosynthesis is the process by which green plants prepare food using sunlight, carbon dioxide and water in the presence of chlorophyll. Oxygen is released as a by-product. It mainly takes place in the leaves.";
+        }
+
+        if(style==="points"){
+            return "Important Points:\\n\\n1. Takes place mainly in leaves.\\n2. Chlorophyll absorbs sunlight.\\n3. Uses carbon dioxide and water.\\n4. Produces food for the plant.\\n5. Oxygen is released.";
+        }
+
+        if(style==="revision"){
+            return "Photosynthesis = sunlight + carbon dioxide + water + chlorophyll → food + oxygen.\\n\\nRemember: Plants use sunlight to make their own food.";
+        }
+
+        return "Photosynthesis is how green plants make their own food. Plants use sunlight as energy, carbon dioxide from the air and water from the soil. Chlorophyll in the leaves helps capture sunlight. During the process, food is produced and oxygen is released.";
+    }
+
+    if(q.includes("pmla")){
+        return "PMLA stands for Prevention of Money Laundering Act. It is an Indian law aimed at preventing money laundering and dealing with proceeds of crime. In banking, KYC, transaction monitoring and reporting processes are important controls related to AML compliance.";
+    }
+
+    if(q.includes("kyc")){
+        return "KYC means Know Your Customer. It is the process of verifying a customer's identity and address and understanding the customer relationship. Banks use KYC procedures to help prevent identity misuse, fraud and money laundering.";
+    }
+
+    if(q.includes("excel")){
+        return "For Excel learning, start with these core topics:\\n\\n1. SUM, AVERAGE, COUNT\\n2. IF and nested IF\\n3. VLOOKUP/XLOOKUP\\n4. SUMIF/SUMIFS\\n5. COUNTIF/COUNTIFS\\n6. Sorting and filtering\\n7. Pivot Tables\\n8. Conditional Formatting\\n9. Data validation\\n10. Basic charts.";
+    }
+
+    if(style==="exam"){
+        return "Exam-style answer:\\n\\nDefinition: "+question+"\\n\\nKey points:\\n1. Understand the definition and basic concept.\\n2. Identify its main features.\\n3. Learn one practical example.\\n4. Revise important terms.\\n\\nTip: Write the answer in a clear introduction, main points and conclusion.";
+    }
+
+    if(style==="points"){
+        return "Important Points:\\n\\n1. Start with the definition.\\n2. Understand the main concept.\\n3. Learn the important terms.\\n4. Practice with examples.\\n5. Revise the topic regularly.";
+    }
+
+    if(style==="revision"){
+        return "Quick Revision:\\n\\nTopic: "+question+"\\n\\n• Learn the definition.\\n• Understand the main idea.\\n• Remember key terms.\\n• Practice one example.\\n• Test yourself without looking at your notes.";
+    }
+
+    return "Let's break this topic into simple steps.\\n\\nTopic: "+question+"\\n\\n1. First understand the basic definition.\\n2. Identify the main idea and important terms.\\n3. Connect the concept with a practical example.\\n4. Write a short explanation in your own words.\\n5. Revise it later using flashcards or practice questions.\\n\\nTip: If you give NEO the exact chapter, question or paragraph, the explanation can be made more specific.";
+}
+
+function usePrompt(prompt){
+    const question=document.getElementById("question");
+    question.value=question.value.trim()
+        ? question.value.trim()+"\\n\\n"+prompt
+        : prompt;
+
+    question.focus();
+}
+
+function copyAnswer(){
+    const text=document.getElementById("answerBox").textContent;
+
+    navigator.clipboard.writeText(text)
+    .then(()=>alert("Answer copied successfully."))
+    .catch(()=>alert("Copy failed. Please copy manually."));
+}
+
+function clearQuestion(){
+    document.getElementById("question").value="";
+    document.getElementById("answer").classList.remove("active");
+}
+
+function saveHistory(question,response){
+    let data=getHistory();
+
+    data.unshift({
+        question,
+        response,
+        date:new Date().toLocaleString("en-IN")
+    });
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data.slice(0,15))
+    );
+
+    renderHistory();
+}
+
+function getHistory(){
+    try{
+        return JSON.parse(
+            localStorage.getItem(STORAGE_KEY)
+        )||[];
+    }catch{
+        return [];
+    }
+}
+
+function renderHistory(){
+    const data=getHistory();
+    const box=document.getElementById("history");
+
+    if(!data.length){
+        box.innerHTML='<div class="empty">No questions asked yet.</div>';
+        return;
+    }
+
+    box.innerHTML=data.map(item=>`
+        <div class="history-item">
+            <strong>${escapeHTML(item.question)}</strong>
+            <p>${escapeHTML(item.date)}</p>
+        </div>
+    `).join("");
+}
+
+function escapeHTML(text){
+    const div=document.createElement("div");
+    div.textContent=text;
+    return div.innerHTML;
+}
+
+function goBack(){
+    window.location.href="student.html";
+}
+
+renderHistory();
+</script>
+</body>
+</html>
