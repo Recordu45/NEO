@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050811">
+<title>NEO | Exam Countdown</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.countdown-page{width:min(900px,100%);margin:auto;padding:25px 18px 110px}
+.header{padding:30px 0}
+.back-btn{border:1px solid rgba(80,180,255,.18);background:rgba(13,21,38,.78);color:white;padding:11px 15px;border-radius:12px;margin-bottom:25px;cursor:pointer}
+.header h1{font-size:clamp(38px,8vw,62px);margin-top:12px}.header h1 span{color:#28c7ff}
+.header p{color:#8e9bb2;line-height:1.6;margin-top:12px}
+.card{padding:24px;background:linear-gradient(135deg,rgba(18,31,54,.95),rgba(8,13,25,.95));border:1px solid rgba(80,180,255,.18);border-radius:22px;margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.group label{display:block;margin-bottom:7px;color:#cbd5e5;font-size:13px}
+.group input{width:100%;padding:13px 14px;border:1px solid rgba(80,180,255,.18);border-radius:12px;outline:none;background:rgba(0,0,0,.25);color:white;font-size:14px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{padding:11px 16px;border:1px solid rgba(80,180,255,.2);border-radius:10px;background:rgba(40,199,255,.08);color:#28c7ff;cursor:pointer}
+.btn.primary{background:#28c7ff;color:#00121a;border-color:#28c7ff;font-weight:800}
+.countdown{text-align:center;padding:30px 10px}
+.exam-name{font-size:clamp(22px,5vw,34px);font-weight:800;color:#fff}
+.exam-date{color:#8e9bb2;margin-top:8px}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px}
+.time-box{padding:22px 10px;background:rgba(13,21,38,.8);border:1px solid rgba(80,180,255,.16);border-radius:17px}
+.time-box strong{display:block;font-size:clamp(30px,7vw,48px);color:#28c7ff}
+.time-box span{display:block;margin-top:5px;color:#8e9bb2;font-size:11px}
+.status{text-align:center;margin-top:20px;color:#42e6a4}
+.history{display:grid;gap:10px}.history-item{padding:15px;background:rgba(13,21,38,.7);border:1px solid rgba(80,180,255,.14);border-radius:14px;color:#cbd5e5}.history-item small{color:#8e9bb2}
+.empty{text-align:center;color:#64748b;padding:25px}
+@media(max-width:600px){.form-grid,.time-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.time-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+
+<body>
+<div class="countdown-page">
+
+<header class="header">
+<button class="back-btn" onclick="goBack()">← Back to Student Mode</button>
+<span class="eyebrow">NEO STUDENT TOOL</span>
+<h1>Exam <span>Countdown</span></h1>
+<p>Set your exam date and track the remaining days, hours, minutes and seconds.</p>
+</header>
+
+<section class="card">
+<h2>Set Exam</h2><br>
+
+<div class="form-grid">
+<div class="group">
+<label>Exam Name</label>
+<input id="examName" placeholder="Example: Semester Exam">
+</div>
+
+<div class="group">
+<label>Exam Date</label>
+<input id="examDate" type="date">
+</div>
+
+<div class="group">
+<label>Exam Time</label>
+<input id="examTime" type="time" value="09:00">
+</div>
+</div>
+
+<div class="actions">
+<button class="btn primary" onclick="startCountdown()">Start Countdown</button>
+<button class="btn" onclick="clearCountdown()">Clear</button>
+</div>
+</section>
+
+<section id="countdownCard" class="card countdown" style="display:none">
+
+<div id="displayName" class="exam-name">Exam</div>
+<div id="displayDate" class="exam-date"></div>
+
+<div class="time-grid">
+<div class="time-box"><strong id="days">0</strong><span>DAYS</span></div>
+<div class="time-box"><strong id="hours">0</strong><span>HOURS</span></div>
+<div class="time-box"><strong id="minutes">0</strong><span>MINUTES</span></div>
+<div class="time-box"><strong id="seconds">0</strong><span>SECONDS</span></div>
+</div>
+
+<div id="status" class="status">
+Countdown active
+</div>
+
+</section>
+
+<section class="card">
+<h2>Saved Exams</h2><br>
+<div id="history" class="history"></div>
+</section>
+
+</div>
+
+<script>
+const STORAGE_KEY="neo_exam_countdowns";
+let timer=null;
+let current=null;
+
+function startCountdown(){
+    const name=document.getElementById("examName").value.trim();
+    const date=document.getElementById("examDate").value;
+    const time=document.getElementById("examTime").value || "09:00";
+
+    if(!name){
+        alert("Please enter exam name.");
+        return;
+    }
+
+    if(!date){
+        alert("Please select exam date.");
+        return;
+    }
+
+    const target=new Date(`${date}T${time}:00`);
+
+    if(isNaN(target.getTime())){
+        alert("Please enter a valid date and time.");
+        return;
+    }
+
+    if(target.getTime()<=Date.now()){
+        alert("Exam date and time must be in the future.");
+        return;
+    }
+
+    current={
+        id:Date.now().toString(),
+        name,
+        date,
+        time,
+        timestamp:target.getTime()
+    };
+
+    saveExam(current);
+    showCountdown();
+}
+
+function showCountdown(){
+    if(!current)return;
+
+    document.getElementById("countdownCard").style.display="block";
+    document.getElementById("displayName").textContent=current.name;
+
+    document.getElementById("displayDate").textContent=
+        formatDate(current.date,current.time);
+
+    clearInterval(timer);
+    updateCountdown();
+    timer=setInterval(updateCountdown,1000);
+
+    document.getElementById("countdownCard").scrollIntoView({
+        behavior:"smooth"
+    });
+}
+
+function updateCountdown(){
+    if(!current)return;
+
+    let diff=current.timestamp-Date.now();
+
+    if(diff<=0){
+        clearInterval(timer);
+
+        document.getElementById("days").textContent="0";
+        document.getElementById("hours").textContent="0";
+        document.getElementById("minutes").textContent="0";
+        document.getElementById("seconds").textContent="0";
+
+        document.getElementById("status").textContent=
+            "Exam time has arrived.";
+
+        document.getElementById("status").style.color="#ff8d8d";
+        return;
+    }
+
+    const day=Math.floor(diff/86400000);
+    diff%=86400000;
+
+    const hour=Math.floor(diff/3600000);
+    diff%=3600000;
+
+    const minute=Math.floor(diff/60000);
+    diff%=60000;
+
+    const second=Math.floor(diff/1000);
+
+    document.getElementById("days").textContent=day;
+    document.getElementById("hours").textContent=String(hour).padStart(2,"0");
+    document.getElementById("minutes").textContent=String(minute).padStart(2,"0");
+    document.getElementById("seconds").textContent=String(second).padStart(2,"0");
+
+    document.getElementById("status").textContent=
+        "Keep preparing. You still have time.";
+}
+
+function saveExam(exam){
+    const exams=getExams().filter(item=>item.id!==exam.id);
+    exams.unshift(exam);
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(exams.slice(0,10)));
+    renderHistory();
+}
+
+function getExams(){
+    try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY))||[];
+    }catch{
+        return [];
+    }
+}
+
+function renderHistory(){
+    const exams=getExams();
+    const box=document.getElementById("history");
+
+    if(!exams.length){
+        box.innerHTML='<div class="empty">No saved exams yet.</div>';
+        return;
+    }
+
+    box.innerHTML=exams.map(exam=>`
+        <div class="history-item">
+            <strong>${escapeHTML(exam.name)}</strong>
+            <br>
+            <small>${formatDate(exam.date,exam.time)}</small>
+            <div class="actions">
+                <button class="btn" onclick="loadExam('${exam.id}')">Open</button>
+                <button class="btn" onclick="deleteExam('${exam.id}')">Delete</button>
+            </div>
+        </div>
+    `).join("");
+}
+
+function loadExam(id){
+    const exam=getExams().find(item=>item.id===id);
+    if(!exam)return;
+
+    if(exam.timestamp<=Date.now()){
+        alert("This exam date has already passed.");
+        return;
+    }
+
+    current=exam;
+    showCountdown();
+}
+
+function deleteExam(id){
+    const exams=getExams().filter(item=>item.id!==id);
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
+
+    if(current && current.id===id){
+        clearCountdown();
+    }
+
+    renderHistory();
+}
+
+function clearCountdown(){
+    clearInterval(timer);
+    timer=null;
+    current=null;
+    document.getElementById("countdownCard").style.display="none";
+}
+
+function formatDate(date,time){
+    const value=new Date(`${date}T${time}:00`);
+    return value.toLocaleString("en-IN",{
+        weekday:"long",
+        day:"2-digit",
+        month:"long",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+}
+
+function escapeHTML(text){
+    const div=document.createElement("div");
+    div.textContent=text;
+    return div.innerHTML;
+}
+
+function goBack(){
+    clearInterval(timer);
+    window.location.href="student.html";
+}
+
+renderHistory();
+</script>
+</body>
+</html>
