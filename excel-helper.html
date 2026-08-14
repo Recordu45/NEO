@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Excel Helper</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .excel-page {
+            width: min(1000px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .excel-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .excel-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .excel-header h1 span {
+            color: #28c7ff;
+        }
+
+        .excel-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .helper-card {
+            padding: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 24px;
+
+            margin-bottom: 18px;
+        }
+
+        .helper-card h2 {
+            margin-bottom: 18px;
+            font-size: 21px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e5;
+            font-size: 13px;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 13px 14px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,.25);
+
+            color: white;
+
+            font-size: 14px;
+        }
+
+        .input-group select option {
+            color: black;
+        }
+
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .generate-btn {
+            width: 100%;
+            height: 50px;
+
+            border: 0;
+
+            border-radius: 12px;
+
+            background: #28c7ff;
+
+            color: #00121a;
+
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        .formula-result {
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 18px;
+
+            background:
+                rgba(40,199,255,.07);
+
+            border:
+                1px solid
+                rgba(40,199,255,.2);
+
+            border-radius: 16px;
+        }
+
+        .formula-result.active {
+            display: block;
+        }
+
+        .formula-result span {
+            display: block;
+
+            color: #8e9bb2;
+
+            font-size: 11px;
+
+            margin-bottom: 8px;
+        }
+
+        .formula-box {
+            padding: 15px;
+
+            background:
+                rgba(0,0,0,.35);
+
+            border-radius: 10px;
+
+            color: #28c7ff;
+
+            font-family:
+                monospace;
+
+            font-size: 14px;
+
+            word-break: break-word;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+
+            padding: 9px 13px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.2);
+
+            border-radius: 9px;
+
+            background:
+                rgba(40,199,255,.08);
+
+            color: #28c7ff;
+
+            cursor: pointer;
+        }
+
+        .quick-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+        }
+
+        .quick-card {
+            padding: 17px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            border-radius: 15px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            cursor: pointer;
+
+            color: white;
+
+            text-align: left;
+        }
+
+        .quick-card:hover {
+            border-color:
+                rgba(40,199,255,.4);
+        }
+
+        .quick-card strong {
+            display: block;
+            color: #28c7ff;
+            margin-bottom: 7px;
+        }
+
+        .quick-card small {
+            color: #8e9bb2;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 650px) {
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="excel-page">
+
+
+    <!-- HEADER -->
+
+    <header class="excel-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Banker Mode
+        </button>
+
+        <span class="eyebrow">
+            NEO BANKER TOOL
+        </span>
+
+        <h1>
+            Excel <span>Helper</span>
+        </h1>
+
+        <p>
+            Generate common Excel formulas for
+            banking reports, customer data and
+            everyday office work.
+        </p>
+
+    </header>
+
+
+    <!-- FORMULA GENERATOR -->
+
+    <section class="helper-card">
+
+        <h2>
+            Formula Generator
+        </h2>
+
+
+        <div class="input-group">
+
+            <label>
+                Select Formula
+            </label>
+
+            <select id="formulaType">
+
+                <option value="sum">
+                    SUM
+                </option>
+
+                <option value="sumif">
+                    SUMIF
+                </option>
+
+                <option value="sumifs">
+                    SUMIFS
+                </option>
+
+                <option value="countif">
+                    COUNTIF
+                </option>
+
+                <option value="countifs">
+                    COUNTIFS
+                </option>
+
+                <option value="if">
+                    IF
+                </option>
+
+                <option value="vlookup">
+                    VLOOKUP
+                </option>
+
+                <option value="xlookup">
+                    XLOOKUP
+                </option>
+
+                <option value="percentage">
+                    Percentage
+                </option>
+
+                <option value="datediff">
+                    Date Difference
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Range / Cell 1
+            </label>
+
+            <input
+                id="input1"
+                placeholder="Example: A2:A100"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Range / Cell 2
+            </label>
+
+            <input
+                id="input2"
+                placeholder="Example: B2:B100"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Criteria / Value
+            </label>
+
+            <input
+                id="criteria"
+                placeholder="Example: Paid"
+            >
+
+        </div>
+
+
+        <button
+            class="generate-btn"
+            onclick="generateFormula()"
+        >
+            Generate Formula
+        </button>
+
+
+        <div
+            id="formulaResult"
+            class="formula-result"
+        >
+
+            <span>
+                GENERATED FORMULA
+            </span>
+
+            <div
+                id="formulaBox"
+                class="formula-box"
+            ></div>
+
+            <button
+                class="copy-btn"
+                onclick="copyFormula()"
+            >
+                Copy Formula
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUICK FORMULAS -->
+
+    <section class="helper-card">
+
+        <h2>
+            Quick Excel Formulas
+        </h2>
+
+
+        <div class="quick-grid">
+
+
+            <button
+                class="quick-card"
+                onclick="showQuick('SUM')"
+            >
+
+                <strong>
+                    SUM
+                </strong>
+
+                <small>
+                    Add numbers from a range.
+                </small>
+
+            </button>
+
+
+            <button
+                class="quick-card"
+                onclick="showQuick('SUMIF')"
+            >
+
+                <strong>
+                    SUMIF
+                </strong>
+
+                <small>
+                    Add values based on one condition.
+                </small>
+
+            </button>
+
+
+            <button
+                class="quick-card"
+                onclick="showQuick('COUNTIF')"
+            >
+
+                <strong>
+                    COUNTIF
+                </strong>
+
+                <small>
+                    Count cells matching a condition.
+                </small>
+
+            </button>
+
+
+            <button
+                class="quick-card"
+                onclick="showQuick('VLOOKUP')"
+            >
+
+                <strong>
+                    VLOOKUP
+                </strong>
+
+                <small>
+                    Find information from a table.
+                </small>
+
+            </button>
+
+
+            <button
+                class="quick-card"
+                onclick="showQuick('XLOOKUP')"
+            >
+
+                <strong>
+                    XLOOKUP
+                </strong>
+
+                <small>
+                    Modern lookup alternative to VLOOKUP.
+                </small>
+
+            </button>
+
+
+            <button
+                class="quick-card"
+                onclick="showQuick('IF')"
+            >
+
+                <strong>
+                    IF
+                </strong>
+
+                <small>
+                    Return different results based on a condition.
+                </small>
+
+            </button>
+
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+
+    /* ==============================
+       FORMULA GENERATOR
+    ============================== */
+
+    function generateFormula() {
+
+        const type =
+            document.getElementById(
+                "formulaType"
+            ).value;
+
+        const input1 =
+            document.getElementById(
+                "input1"
+            ).value.trim();
+
+        const input2 =
+            document.getElementById(
+                "input2"
+            ).value.trim();
+
+        const criteria =
+            document.getElementById(
+                "criteria"
+            ).value.trim();
+
+
+        let formula = "";
+
+
+        switch (type) {
+
+
+            case "sum":
+
+                formula =
+                    `=SUM(${input1 || "A2:A100"})`;
+
+                break;
+
+
+            case "sumif":
+
+                formula =
+                    `=SUMIF(${input1 || "A2:A100"},${criteria ? `"${criteria}"` : '"Paid"'},${input2 || "B2:B100"})`;
+
+                break;
+
+
+            case "sumifs":
+
+                formula =
+                    `=SUMIFS(${input1 || "C2:C100"},${input2 || "A2:A100"},${criteria ? `"${criteria}"` : '"Paid"'})`;
+
+                break;
+
+
+            case "countif":
+
+                formula =
+                    `=COUNTIF(${input1 || "A2:A100"},${criteria ? `"${criteria}"` : '"Paid"'})`;
+
+                break;
+
+
+            case "countifs":
+
+                formula =
+                    `=COUNTIFS(${input1 || "A2:A100"},${criteria ? `"${criteria}"` : '"Paid"'},${input2 || "B2:B100"},"Yes")`;
+
+                break;
+
+
+            case "if":
+
+                formula =
+                    `=IF(${input1 || "A2"}=${criteria ? `"${criteria}"` : '"Paid"'},"Yes","No")`;
+
+                break;
+
+
+            case "vlookup":
+
+                formula =
+                    `=VLOOKUP(${criteria || "A2"},${input1 || "A2:D100"},${input2 || "4"},FALSE)`;
+
+                break;
+
+
+            case "xlookup":
+
+                formula =
+                    `=XLOOKUP(${criteria || "A2"},${input1 || "A2:A100"},${input2 || "D2:D100"},"Not Found")`;
+
+                break;
+
+
+            case "percentage":
+
+                formula =
+                    `=${input1 || "B2"}/${input2 || "C2"}*100`;
+
+                break;
+
+
+            case "datediff":
+
+                formula =
+                    `=DATEDIF(${input1 || "A2"},${input2 || "B2"},"d")`;
+
+                break;
+
+
+            default:
+
+                formula =
+                    "=SUM(A2:A100)";
+
+        }
+
+
+        document.getElementById(
+            "formulaBox"
+        ).textContent =
+            formula;
+
+
+        document.getElementById(
+            "formulaResult"
+        ).classList.add(
+            "active"
+        );
+
+    }
+
+
+    /* ==============================
+       COPY
+    ============================== */
+
+    function copyFormula() {
+
+        const formula =
+            document.getElementById(
+                "formulaBox"
+            ).textContent;
+
+
+        navigator.clipboard
+            .writeText(formula)
+            .then(() => {
+
+                alert(
+                    "Formula copied!"
+                );
+
+            })
+            .catch(() => {
+
+                alert(
+                    "Copy failed. Please copy the formula manually."
+                );
+
+            });
+
+    }
+
+
+    /* ==============================
+       QUICK FORMULAS
+    ============================== */
+
+    function showQuick(type) {
+
+        const formulas = {
+
+            SUM:
+                "=SUM(A2:A100)",
+
+            SUMIF:
+                '=SUMIF(A2:A100,"Paid",B2:B100)',
+
+            COUNTIF:
+                '=COUNTIF(A2:A100,"Paid")',
+
+            VLOOKUP:
+                '=VLOOKUP(A2,A2:D100,4,FALSE)',
+
+            XLOOKUP:
+                '=XLOOKUP(A2,A2:A100,D2:D100,"Not Found")',
+
+            IF:
+                '=IF(A2="Paid","Yes","No")'
+
+        };
+
+
+        alert(
+            type +
+            "\n\n" +
+            formulas[type]
+        );
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "banker.html";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
