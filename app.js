@@ -1,6 +1,5 @@
 /* ==========================================
-   NEO V1
-   Main Application JavaScript
+   NEO V1 - MAIN APP
 ========================================== */
 
 
@@ -23,7 +22,7 @@ window.addEventListener("load", () => {
             app.classList.remove("hidden");
         }
 
-    }, 1000);
+    }, 800);
 
 });
 
@@ -68,24 +67,21 @@ function sendAI() {
     if (!message) {
 
         response.innerHTML = `
-            <p>
-                Please enter something first.
-            </p>
+            <p>Please enter a question first.</p>
         `;
 
         return;
     }
 
-
     response.innerHTML = `
         <p>
-            <strong>You:</strong> ${escapeHTML(message)}
+            <strong>You:</strong>
+            ${escapeHTML(message)}
         </p>
 
         <p>
             <strong>NEO:</strong>
-            AI Copilot is ready. The real AI engine
-            will be connected in the next development stage.
+            AI engine connection is coming next.
         </p>
     `;
 
@@ -95,16 +91,79 @@ function sendAI() {
 
 
 /* ==========================================
-   SECURITY HELPER
+   STUDENT MODE
 ========================================== */
 
-function escapeHTML(text) {
+function studentMode() {
 
-    const div = document.createElement("div");
+    window.location.href = "student.html";
 
-    div.textContent = text;
+}
 
-    return div.innerHTML;
+
+/* ==========================================
+   BANKER MODE
+========================================== */
+
+function bankerMode() {
+
+    alert(
+        "Banker Mode is coming next.\n\n" +
+        "Banking Tools\n" +
+        "Excel Helper\n" +
+        "EMI Calculator\n" +
+        "DPD/NPA Tools\n" +
+        "Reports"
+    );
+
+}
+
+
+/* ==========================================
+   SMART TOOLS
+========================================== */
+
+function showTools() {
+
+    alert(
+        "NEO Smart Tools are coming next.\n\n" +
+        "EMI Calculator\n" +
+        "Cash Denomination\n" +
+        "Excel Helper\n" +
+        "Percentage Calculator\n" +
+        "Date Calculator"
+    );
+
+}
+
+
+/* ==========================================
+   TASKS
+========================================== */
+
+function showTasks() {
+
+    alert(
+        "NEO Tasks module is coming next."
+    );
+
+}
+
+
+/* ==========================================
+   HOME
+========================================== */
+
+function goHome() {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    closeAI();
+    closeNotifications();
+    closeProfile();
 
 }
 
@@ -166,99 +225,22 @@ function closeProfile() {
 
 
 /* ==========================================
-   STUDENT MODE
+   HTML SECURITY
 ========================================== */
 
-function studentMode() {
+function escapeHTML(text) {
 
-    alert(
-        "Student Mode\n\n" +
-        "Coming next:\n" +
-        "• AI Study Assistant\n" +
-        "• PDF Notes\n" +
-        "• AI Quiz\n" +
-        "• Exam Preparation\n" +
-        "• Resume Builder\n" +
-        "• Interview Practice"
-    );
+    const div = document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
 
 }
 
 
 /* ==========================================
-   BANKER MODE
-========================================== */
-
-function bankerMode() {
-
-    alert(
-        "Banker Mode\n\n" +
-        "Coming next:\n" +
-        "• EMI Calculator\n" +
-        "• DPD Calculator\n" +
-        "• NPA Tools\n" +
-        "• Cash Denomination\n" +
-        "• Excel Helper\n" +
-        "• Banking Reports"
-    );
-
-}
-
-
-/* ==========================================
-   SMART TOOLS
-========================================== */
-
-function showTools() {
-
-    alert(
-        "NEO Smart Tools\n\n" +
-        "Tools module will include:\n" +
-        "• EMI Calculator\n" +
-        "• Cash Denomination\n" +
-        "• Excel Helper\n" +
-        "• Percentage Calculator\n" +
-        "• Date Calculator\n" +
-        "• Banking Tools"
-    );
-
-}
-
-
-/* ==========================================
-   TASKS
-========================================== */
-
-function showTasks() {
-
-    alert(
-        "NEO Tasks\n\n" +
-        "Task management system will be added next."
-    );
-
-}
-
-
-/* ==========================================
-   HOME
-========================================== */
-
-function goHome() {
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-    closeAI();
-    closeNotifications();
-    closeProfile();
-
-}
-
-
-/* ==========================================
-   KEYBOARD SHORTCUTS
+   ESC KEY
 ========================================== */
 
 document.addEventListener("keydown", (event) => {
@@ -303,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /* ==========================================
-   PWA SERVICE WORKER
+   SERVICE WORKER
 ========================================== */
 
 if ("serviceWorker" in navigator) {
