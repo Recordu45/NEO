@@ -72,25 +72,16 @@
             min-height: 190px;
             text-align: left;
             color: #f4f8ff;
-
             background: rgba(13,21,38,.78);
-
-            border:
-                1px solid
-                rgba(80,180,255,.18);
-
+            border: 1px solid rgba(80,180,255,.18);
             border-radius: 22px;
-
             transition: .25s;
-
             cursor: pointer;
         }
 
         .banker-card:hover {
             transform: translateY(-4px);
-
-            border-color:
-                rgba(40,199,255,.5);
+            border-color: rgba(40,199,255,.5);
         }
 
         .banker-card .card-icon {
@@ -104,48 +95,33 @@
 
         .banker-card p {
             margin-top: 8px;
-
             color: #8e9bb2;
-
             line-height: 1.5;
-
             font-size: 13px;
         }
 
         .banker-card .open {
             display: inline-block;
-
             margin-top: 15px;
-
             color: #28c7ff;
-
             font-size: 13px;
         }
 
         .working {
-            border-color:
-                rgba(40,199,255,.35);
-
-            box-shadow:
-                0 0 25px
-                rgba(40,199,255,.06);
+            border-color: rgba(40,199,255,.35);
+            box-shadow: 0 0 25px rgba(40,199,255,.06);
         }
 
         .status {
             display: inline-block;
-
             margin-top: 8px;
-
             color: #42e6a4;
-
             font-size: 10px;
-
             letter-spacing: 1px;
         }
 
         .notice-card {
             margin-top: 20px;
-
             padding: 24px;
 
             background:
@@ -155,26 +131,19 @@
                     rgba(8,13,25,.9)
                 );
 
-            border:
-                1px solid
-                rgba(80,180,255,.18);
-
+            border: 1px solid rgba(80,180,255,.18);
             border-radius: 22px;
         }
 
         .notice-card span {
             color: #28c7ff;
-
             font-size: 11px;
-
             letter-spacing: 1.5px;
         }
 
         .notice-card p {
             color: #8e9bb2;
-
             line-height: 1.6;
-
             margin-top: 10px;
         }
 
@@ -208,17 +177,14 @@
             ← Back to NEO
         </button>
 
-
         <span class="eyebrow">
             NEO BANKER MODE
         </span>
-
 
         <h1>
             Work smarter with
             <span>NEO</span>
         </h1>
-
 
         <p>
             Your banking workspace for calculations,
@@ -377,11 +343,11 @@
         </button>
 
 
-        <!-- EXCEL -->
+        <!-- EXCEL HELPER -->
 
         <button
-            class="banker-card"
-            onclick="comingSoon('Excel Helper')"
+            class="banker-card working"
+            onclick="openExcelHelper()"
         >
 
             <div class="card-icon">
@@ -393,18 +359,22 @@
             </h3>
 
             <p>
-                Formulas, lookups, pivots and
-                reporting assistance.
+                Generate formulas for banking,
+                reports and everyday office work.
             </p>
 
+            <span class="status">
+                ● WORKING
+            </span>
+
             <span class="open">
-                Open →
+                Open Excel Helper →
             </span>
 
         </button>
 
 
-        <!-- REPORT -->
+        <!-- REPORT GENERATOR -->
 
         <button
             class="banker-card"
@@ -420,8 +390,8 @@
             </h3>
 
             <p>
-                Turn branch notes and inputs
-                into structured reports.
+                Create structured reports from
+                branch information and inputs.
             </p>
 
             <span class="open">
@@ -475,7 +445,7 @@
 
             <p>
                 Track recurring operational tasks
-                and pending work.
+                and pending branch work.
             </p>
 
             <span class="open">
@@ -550,6 +520,18 @@
 
         window.location.href =
             "loan-tools.html";
+
+    }
+
+
+    /* ==============================
+       EXCEL HELPER
+    ============================== */
+
+    function openExcelHelper() {
+
+        window.location.href =
+            "excel-helper.html";
 
     }
 
