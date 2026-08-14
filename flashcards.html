@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050811">
+<title>NEO | Flashcards</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.flash-page{width:min(950px,100%);margin:auto;padding:25px 18px 110px}
+.header{padding:30px 0}
+.back-btn{border:1px solid rgba(80,180,255,.18);background:rgba(13,21,38,.78);color:white;padding:11px 15px;border-radius:12px;margin-bottom:25px;cursor:pointer}
+.header h1{font-size:clamp(38px,8vw,62px);margin-top:12px}.header h1 span{color:#28c7ff}
+.header p{color:#8e9bb2;line-height:1.6;margin-top:12px}
+.card{padding:24px;background:linear-gradient(135deg,rgba(18,31,54,.95),rgba(8,13,25,.95));border:1px solid rgba(80,180,255,.18);border-radius:22px;margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.group label{display:block;margin-bottom:7px;color:#cbd5e5;font-size:13px}
+.group input,.group textarea{width:100%;padding:13px 14px;border:1px solid rgba(80,180,255,.18);border-radius:12px;outline:none;background:rgba(0,0,0,.25);color:white;font-size:14px}
+.group textarea{min-height:100px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{padding:11px 16px;border:1px solid rgba(80,180,255,.2);border-radius:10px;background:rgba(40,199,255,.08);color:#28c7ff;cursor:pointer}
+.btn.primary{background:#28c7ff;color:#00121a;border-color:#28c7ff;font-weight:800}
+.btn.danger{color:#ff8d8d}
+.study-area{text-align:center}
+.flashcard{min-height:260px;display:flex;align-items:center;justify-content:center;padding:30px;background:rgba(13,21,38,.8);border:1px solid rgba(80,180,255,.2);border-radius:22px;cursor:pointer;user-select:none}
+.card-content{width:100%}
+.card-label{font-size:11px;letter-spacing:1.5px;color:#28c7ff}
+.card-text{font-size:clamp(22px,5vw,34px);line-height:1.5;color:#fff;margin-top:18px}
+.counter{margin-top:15px;color:#8e9bb2;font-size:13px}
+.list{display:grid;gap:10px}.item{padding:15px;background:rgba(13,21,38,.7);border:1px solid rgba(80,180,255,.14);border-radius:14px}
+.item strong{color:#28c7ff}.item p{color:#8e9bb2;font-size:12px;margin-top:6px}
+.empty{text-align:center;color:#64748b;padding:25px}
+@media(max-width:650px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+<div class="flash-page">
+
+<header class="header">
+<button class="back-btn" onclick="goBack()">← Back to Student Mode</button>
+<span class="eyebrow">NEO STUDENT TOOL</span>
+<h1>Flash<span>cards</span></h1>
+<p>Create quick revision cards and practice important concepts.</p>
+</header>
+
+<section class="card">
+<h2>Create Flashcard</h2><br>
+
+<div class="form-grid">
+<div class="group">
+<label>Front / Question</label>
+<input id="front" placeholder="Example: What is photosynthesis?">
+</div>
+
+<div class="group">
+<label>Back / Answer</label>
+<input id="back" placeholder="Example: Process by which plants make food">
+</div>
+
+<div class="group">
+<label>Subject</label>
+<input id="subject" placeholder="Example: Biology">
+</div>
+
+<div class="group">
+<label>Topic</label>
+<input id="topic" placeholder="Example: Plant Life">
+</div>
+</div>
+
+<div class="actions">
+<button class="btn primary" onclick="addCard()">Add Flashcard</button>
+<button class="btn" onclick="clearForm()">Clear</button>
+</div>
+</section>
+
+<section class="card study-area">
+<h2>Revision Mode</h2><br>
+
+<div id="flashcard" class="flashcard" onclick="flipCard()">
+<div class="card-content">
+<div id="cardLabel" class="card-label">QUESTION</div>
+<div id="cardText" class="card-text">Add some flashcards to start.</div>
+</div>
+</div>
+
+<div id="counter" class="counter">0 / 0</div>
+
+<div class="actions" style="justify-content:center">
+<button class="btn" onclick="previousCard()">← Previous</button>
+<button class="btn primary" onclick="flipCard()">Flip Card</button>
+<button class="btn" onclick="nextCard()">Next →</button>
+</div>
+
+<div class="actions" style="justify-content:center">
+<button class="btn" onclick="shuffleCards()">Shuffle</button>
+</div>
+</section>
+
+<section class="card">
+<h2>My Flashcards</h2><br>
+<div id="cardList" class="list"></div>
+</section>
+
+</div>
+
+<script>
+const STORAGE_KEY="neo_flashcards";
+let cards=getCards();
+let currentIndex=0;
+let showingAnswer=false;
+
+function getCards(){
+    try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY))||[];
+    }catch{
+        return [];
+    }
+}
+
+function saveCards(){
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(cards));
+}
+
+function addCard(){
+    const front=document.getElementById("front").value.trim();
+    const back=document.getElementById("back").value.trim();
+    const subject=document.getElementById("subject").value.trim();
+    const topic=document.getElementById("topic").value.trim();
+
+    if(!front){
+        alert("Please enter the question/front.");
+        return;
+    }
+
+    if(!back){
+        alert("Please enter the answer/back.");
+        return;
+    }
+
+    cards.push({
+        id:Date.now().toString(),
+        front,
+        back,
+        subject:subject||"General",
+        topic:topic||""
+    });
+
+    saveCards();
+    clearForm();
+
+    currentIndex=cards.length-1;
+    showingAnswer=false;
+
+    renderCard();
+    renderList();
+}
+
+function deleteCard(id){
+    if(!confirm("Delete this flashcard?"))return;
+
+    cards=cards.filter(card=>card.id!==id);
+    saveCards();
+
+    if(currentIndex>=cards.length){
+        currentIndex=Math.max(0,cards.length-1);
+    }
+
+    showingAnswer=false;
+    renderCard();
+    renderList();
+}
+
+function flipCard(){
+    if(!cards.length)return;
+
+    showingAnswer=!showingAnswer;
+    renderCard();
+}
+
+function nextCard(){
+    if(!cards.length)return;
+
+    currentIndex=(currentIndex+1)%cards.length;
+    showingAnswer=false;
+    renderCard();
+}
+
+function previousCard(){
+    if(!cards.length)return;
+
+    currentIndex=(currentIndex-1+cards.length)%cards.length;
+    showingAnswer=false;
+    renderCard();
+}
+
+function shuffleCards(){
+    if(cards.length<2)return;
+
+    for(let i=cards.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [cards[i],cards[j]]=[cards[j],cards[i]];
+    }
+
+    currentIndex=0;
+    showingAnswer=false;
+
+    saveCards();
+    renderCard();
+    renderList();
+}
+
+function renderCard(){
+    const text=document.getElementById("cardText");
+    const label=document.getElementById("cardLabel");
+    const counter=document.getElementById("counter");
+
+    if(!cards.length){
+        label.textContent="QUESTION";
+        text.textContent="Add some flashcards to start.";
+        counter.textContent="0 / 0";
+        return;
+    }
+
+    const card=cards[currentIndex];
+
+    if(showingAnswer){
+        label.textContent="ANSWER";
+        text.textContent=card.back;
+    }else{
+        label.textContent="QUESTION";
+        text.textContent=card.front;
+    }
+
+    counter.textContent=
+        (currentIndex+1)+" / "+cards.length;
+}
+
+function renderList(){
+    const box=document.getElementById("cardList");
+
+    if(!cards.length){
+        box.innerHTML='<div class="empty">No flashcards created yet.</div>';
+        return;
+    }
+
+    box.innerHTML=cards.map(card=>`
+        <div class="item">
+            <strong>${escapeHTML(card.front)}</strong>
+            <p>${escapeHTML(card.back)}</p>
+            <p>
+                ${escapeHTML(card.subject)}
+                ${card.topic?" • "+escapeHTML(card.topic):""}
+            </p>
+            <button class="btn danger" onclick="deleteCard('${card.id}')">
+                Delete
+            </button>
+        </div>
+    `).join("");
+}
+
+function clearForm(){
+    document.getElementById("front").value="";
+    document.getElementById("back").value="";
+    document.getElementById("subject").value="";
+    document.getElementById("topic").value="";
+}
+
+function escapeHTML(text){
+    const div=document.createElement("div");
+    div.textContent=text;
+    return div.innerHTML;
+}
+
+function goBack(){
+    window.location.href="student.html";
+}
+
+renderCard();
+renderList();
+</script>
+</body>
+</html>
