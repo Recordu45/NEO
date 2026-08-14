@@ -73,8 +73,7 @@
             text-align: left;
             color: #f4f8ff;
 
-            background:
-                rgba(13,21,38,.78);
+            background: rgba(13,21,38,.78);
 
             border:
                 1px solid
@@ -123,6 +122,27 @@
             font-size: 13px;
         }
 
+        .working {
+            border-color:
+                rgba(40,199,255,.35);
+
+            box-shadow:
+                0 0 25px
+                rgba(40,199,255,.06);
+        }
+
+        .status {
+            display: inline-block;
+
+            margin-top: 8px;
+
+            color: #42e6a4;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+        }
+
         .notice-card {
             margin-top: 20px;
 
@@ -156,27 +176,6 @@
             line-height: 1.6;
 
             margin-top: 10px;
-        }
-
-        .working {
-            border-color:
-                rgba(40,199,255,.35);
-
-            box-shadow:
-                0 0 25px
-                rgba(40,199,255,.06);
-        }
-
-        .status {
-            display: inline-block;
-
-            margin-top: 8px;
-
-            color: #42e6a4;
-
-            font-size: 10px;
-
-            letter-spacing: 1px;
         }
 
         @media (max-width: 650px) {
@@ -249,7 +248,7 @@
     </section>
 
 
-    <!-- TOOLS -->
+    <!-- BANKER TOOLS -->
 
     <section class="banker-grid">
 
@@ -319,8 +318,8 @@
         <!-- DPD -->
 
         <button
-            class="banker-card"
-            onclick="comingSoon('DPD Calculator')"
+            class="banker-card working"
+            onclick="openDPD()"
         >
 
             <div class="card-icon">
@@ -336,8 +335,12 @@
                 relevant dates.
             </p>
 
+            <span class="status">
+                ● WORKING
+            </span>
+
             <span class="open">
-                Open →
+                Open Calculator →
             </span>
 
         </button>
@@ -500,7 +503,7 @@
 
 
     /* ==============================
-       EMI CALCULATOR
+       EMI
     ============================== */
 
     function openEMI() {
@@ -519,6 +522,18 @@
 
         window.location.href =
             "denomination.html";
+
+    }
+
+
+    /* ==============================
+       DPD
+    ============================== */
+
+    function openDPD() {
+
+        window.location.href =
+            "dpd.html";
 
     }
 
