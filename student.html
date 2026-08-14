@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#050811">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
     <title>NEO | Student Mode</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
     <style>
+
         .student-page {
             width: min(1100px, 100%);
             margin: auto;
@@ -21,9 +38,10 @@
             border: 1px solid rgba(80,180,255,.18);
             background: rgba(13,21,38,.78);
             color: #fff;
-            padding: 10px 14px;
+            padding: 11px 15px;
             border-radius: 12px;
             margin-bottom: 25px;
+            cursor: pointer;
         }
 
         .student-header h1 {
@@ -37,62 +55,33 @@
 
         .student-header p {
             color: #8e9bb2;
-            max-width: 650px;
+            max-width: 700px;
             line-height: 1.6;
             margin-top: 12px;
         }
 
-        .student-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-top: 25px;
-        }
-
-        .student-card {
-            padding: 24px;
-            min-height: 190px;
-            text-align: left;
-            color: #f4f8ff;
-            background: rgba(13,21,38,.78);
-            border: 1px solid rgba(80,180,255,.18);
-            border-radius: 22px;
-            transition: .25s;
-        }
-
-        .student-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(40,199,255,.5);
-        }
-
-        .student-card .card-icon {
-            font-size: 30px;
-        }
-
-        .student-card h3 {
-            margin-top: 18px;
-            font-size: 20px;
-        }
-
-        .student-card p {
-            margin-top: 8px;
-            color: #8e9bb2;
-            line-height: 1.5;
-            font-size: 13px;
-        }
-
-        .student-card .open {
-            display: inline-block;
+        .tool-count {
             margin-top: 15px;
-            color: #28c7ff;
-            font-size: 13px;
+            color: #42e6a4;
+            font-size: 12px;
+            letter-spacing: .5px;
         }
 
         .goal-card {
             margin-top: 20px;
             padding: 24px;
-            background: linear-gradient(135deg, rgba(18,31,54,.9), rgba(8,13,25,.9));
-            border: 1px solid rgba(80,180,255,.18);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.9),
+                    rgba(8,13,25,.9)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
             border-radius: 22px;
         }
 
@@ -124,211 +113,566 @@
             border-radius: inherit;
         }
 
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .student-card {
+            padding: 24px;
+            min-height: 205px;
+            text-align: left;
+
+            color: #f4f8ff;
+
+            background:
+                rgba(13,21,38,.78);
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 22px;
+
+            transition: .25s;
+
+            cursor: pointer;
+        }
+
+        .student-card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(40,199,255,.5);
+        }
+
+        .student-card .card-icon {
+            font-size: 30px;
+        }
+
+        .student-card h3 {
+            margin-top: 17px;
+            font-size: 19px;
+        }
+
+        .student-card p {
+            margin-top: 8px;
+
+            color: #8e9bb2;
+
+            line-height: 1.5;
+
+            font-size: 13px;
+        }
+
+        .student-card .open {
+            display: inline-block;
+
+            margin-top: 13px;
+
+            color: #28c7ff;
+
+            font-size: 13px;
+        }
+
+        .working {
+            border-color:
+                rgba(40,199,255,.35);
+
+            box-shadow:
+                0 0 25px
+                rgba(40,199,255,.06);
+        }
+
+        .status {
+            display: block;
+
+            margin-top: 8px;
+
+            color: #42e6a4;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+        }
+
+        .coming {
+            color: #64748b;
+        }
+
         @media (max-width: 650px) {
+
             .student-grid {
                 grid-template-columns: 1fr;
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <div class="student-page">
 
-        <header class="student-header">
-
-            <button class="back-btn" onclick="history.back()">
-                ← Back to NEO
-            </button>
-
-            <span class="eyebrow">NEO STUDENT MODE</span>
-
-            <h1>
-                Learn smarter with <span>NEO</span>
-            </h1>
-
-            <p>
-                Your personal study workspace for learning,
-                exams, practice, career preparation and progress.
-            </p>
-
-        </header>
+<div class="student-page">
 
 
-        <section class="goal-card">
+    <!-- HEADER -->
 
-            <div class="goal-top">
-                <div>
-                    <span>TODAY'S GOAL</span>
-                    <h2>Study Progress</h2>
-                </div>
+    <header class="student-header">
 
-                <strong>35%</strong>
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to NEO
+        </button>
+
+
+        <span class="eyebrow">
+            NEO STUDENT MODE
+        </span>
+
+
+        <h1>
+            Learn smarter with
+            <span>NEO</span>
+        </h1>
+
+
+        <p>
+            Your personal study workspace for learning,
+            exams, practice, career preparation and progress.
+        </p>
+
+
+        <div class="tool-count">
+            ● 12 STUDENT TOOLS
+        </div>
+
+    </header>
+
+
+    <!-- STUDY PROGRESS -->
+
+    <section class="goal-card">
+
+        <div class="goal-top">
+
+            <div>
+
+                <span>
+                    TODAY'S GOAL
+                </span>
+
+                <h2>
+                    Study Progress
+                </h2>
+
             </div>
 
-            <div class="progress">
-                <span></span>
-            </div>
-
-        </section>
-
-
-        <section class="student-grid">
-
-            <button class="student-card" onclick="openStudentAI()">
-                <div class="card-icon">✦</div>
-                <h3>AI Study Assistant</h3>
-                <p>
-                    Ask questions, understand difficult topics
-                    and get simple explanations.
-                </p>
-                <span class="open">Open →</span>
-            </button>
-
-
-            <button class="student-card" onclick="studentComingSoon('Notes Maker')">
-                <div class="card-icon">📝</div>
-                <h3>Notes Maker</h3>
-                <p>
-                    Create structured notes from topics,
-                    text and study material.
-                </p>
-                <span class="open">Open →</span>
-            </button>
-
-
-            <button class="student-card" onclick="studentComingSoon('Quiz Generator')">
-                <div class="card-icon">🧠</div>
-                <h3>Quiz Generator</h3>
-                <p>
-                    Generate practice questions and test
-                    your knowledge.
-                </p>
-                <span class="open">Open →</span>
-            </button>
-
-
-            <button class="student-card" onclick="studentComingSoon('Exam Preparation')">
-                <div class="card-icon">🎯</div>
-                <h3>Exam Preparation</h3>
-                <p>
-                    Build a preparation plan for your
-                    target examination.
-                </p>
-                <span class="open">Open →</span>
-            </button>
-
-
-            <button class="student-card" onclick="studentComingSoon('Study Timer')">
-                <div class="card-icon">⏱️</div>
-                <h3>Study Timer</h3>
-                <p>
-                    Focus with timed study sessions and
-                    track your practice.
-                </p>
-                <span class="open">Open →</span>
-            </button>
-
-
-            <button class="student-card" onclick="studentComingSoon('Career Tools')">
-                <div class="card-icon">💼</div>
-                <h3>Career Tools</h3>
-                <p>
-                    Resume, interview preparation and
-                    career skill planning.
-                </p>
-                <span class="open">Open →</span>
-            </button>
-
-        </section>
-
-    </div>
-
-
-    <div id="studentAI" class="modal">
-
-        <div class="modal-box">
-
-            <button class="close-btn" onclick="closeStudentAI()">×</button>
-
-            <div class="ai-icon">✦</div>
-
-            <h3>NEO Study Assistant</h3>
-
-            <p>
-                Ask NEO to explain a topic in simple language.
-            </p>
-
-            <input
-                id="studentQuestion"
-                type="text"
-                placeholder="Example: Explain photosynthesis..."
-            >
-
-            <button class="primary-btn" onclick="askStudentAI()">
-                Ask NEO
-            </button>
-
-            <div id="studentAnswer"></div>
+            <strong>
+                35%
+            </strong>
 
         </div>
 
-    </div>
+
+        <div class="progress">
+
+            <span></span>
+
+        </div>
+
+    </section>
 
 
-    <script>
+    <!-- STUDENT TOOLS -->
 
-        function openStudentAI() {
-            document.getElementById("studentAI").classList.add("active");
-        }
+    <section class="student-grid">
 
-        function closeStudentAI() {
-            document.getElementById("studentAI").classList.remove("active");
-        }
 
-        function askStudentAI() {
+        <!-- 1 AI STUDY ASSISTANT -->
 
-            const input = document.getElementById("studentQuestion");
-            const answer = document.getElementById("studentAnswer");
+        <button
+            class="student-card"
+            onclick="openAI()"
+        >
 
-            const question = input.value.trim();
+            <div class="card-icon">
+                ✦
+            </div>
 
-            if (!question) {
-                answer.innerHTML = "<p>Please enter a topic first.</p>";
-                return;
-            }
+            <h3>
+                AI Study Assistant
+            </h3>
 
-            answer.innerHTML = `
-                <p>
-                    <strong>You:</strong>
-                    ${escapeHTML(question)}
-                </p>
+            <p>
+                Ask questions, understand difficult topics
+                and get simple explanations.
+            </p>
 
-                <p>
-                    <strong>NEO:</strong>
-                    The AI study engine will be connected in the
-                    next stage. Your Student Mode interface is ready.
-                </p>
-            `;
+            <span class="open">
+                Open →
+            </span>
 
-            input.value = "";
-        }
+        </button>
 
-        function studentComingSoon(feature) {
-            alert(
-                feature +
-                " will be connected in the next Student Mode update."
-            );
-        }
 
-        function escapeHTML(text) {
-            const div = document.createElement("div");
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        <!-- 2 NOTES -->
 
-    </script>
+        <button
+            class="student-card working"
+            onclick="openPage('notes.html')"
+        >
+
+            <div class="card-icon">
+                📝
+            </div>
+
+            <h3>
+                Notes Maker
+            </h3>
+
+            <p>
+                Create, save, edit and manage
+                your study notes.
+            </p>
+
+            <span class="status">
+                ● WORKING
+            </span>
+
+            <span class="open">
+                Open Notes →
+            </span>
+
+        </button>
+
+
+        <!-- 3 QUIZ -->
+
+        <button
+            class="student-card"
+            onclick="openPage('quiz.html')"
+        >
+
+            <div class="card-icon">
+                🧠
+            </div>
+
+            <h3>
+                Quiz Generator
+            </h3>
+
+            <p>
+                Generate practice questions and
+                test your knowledge.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 4 EXAM PREPARATION -->
+
+        <button
+            class="student-card"
+            onclick="openPage('exam-prep.html')"
+        >
+
+            <div class="card-icon">
+                🎯
+            </div>
+
+            <h3>
+                Exam Preparation
+            </h3>
+
+            <p>
+                Build a preparation plan for your
+                target examination.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 5 STUDY TIMER -->
+
+        <button
+            class="student-card"
+            onclick="openPage('study-timer.html')"
+        >
+
+            <div class="card-icon">
+                ⏱️
+            </div>
+
+            <h3>
+                Study Timer
+            </h3>
+
+            <p>
+                Focus with timed study sessions
+                and track your practice.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 6 CAREER TOOLS -->
+
+        <button
+            class="student-card"
+            onclick="openPage('career-tools.html')"
+        >
+
+            <div class="card-icon">
+                💼
+            </div>
+
+            <h3>
+                Career Tools
+            </h3>
+
+            <p>
+                Resume, interview preparation and
+                career skill planning.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 7 STUDY PLANNER -->
+
+        <button
+            class="student-card"
+            onclick="openPage('study-planner.html')"
+        >
+
+            <div class="card-icon">
+                📅
+            </div>
+
+            <h3>
+                Study Planner
+            </h3>
+
+            <p>
+                Plan subjects, study sessions and
+                your daily learning schedule.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 8 ASSIGNMENT TRACKER -->
+
+        <button
+            class="student-card"
+            onclick="openPage('assignments.html')"
+        >
+
+            <div class="card-icon">
+                📚
+            </div>
+
+            <h3>
+                Assignment Tracker
+            </h3>
+
+            <p>
+                Track assignments, deadlines and
+                completed academic work.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 9 ATTENDANCE -->
+
+        <button
+            class="student-card"
+            onclick="openPage('attendance.html')"
+        >
+
+            <div class="card-icon">
+                📊
+            </div>
+
+            <h3>
+                Attendance Calculator
+            </h3>
+
+            <p>
+                Calculate attendance percentage and
+                required classes.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 10 MARKS -->
+
+        <button
+            class="student-card"
+            onclick="openPage('marks.html')"
+        >
+
+            <div class="card-icon">
+                🧮
+            </div>
+
+            <h3>
+                Marks & Percentage
+            </h3>
+
+            <p>
+                Calculate total marks, percentage,
+                average and grade.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 11 COUNTDOWN -->
+
+        <button
+            class="student-card"
+            onclick="openPage('exam-countdown.html')"
+        >
+
+            <div class="card-icon">
+                ⏳
+            </div>
+
+            <h3>
+                Exam Countdown
+            </h3>
+
+            <p>
+                Set your exam date and see the
+                remaining days and time.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+        <!-- 12 FLASHCARDS -->
+
+        <button
+            class="student-card"
+            onclick="openPage('flashcards.html')"
+        >
+
+            <div class="card-icon">
+                🗂️
+            </div>
+
+            <h3>
+                Flashcards
+            </h3>
+
+            <p>
+                Create quick revision cards and
+                practice important concepts.
+            </p>
+
+            <span class="open">
+                Open →
+            </span>
+
+        </button>
+
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "index.html";
+
+    }
+
+
+    /* ==============================
+       OPEN PAGE
+    ============================== */
+
+    function openPage(page) {
+
+        window.location.href =
+            page;
+
+    }
+
+
+    /* ==============================
+       AI
+    ============================== */
+
+    function openAI() {
+
+        alert(
+            "AI Study Assistant is the next module we will connect."
+        );
+
+    }
+
+
+</script>
+
 
 </body>
+
 </html>
