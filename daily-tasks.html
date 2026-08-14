@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Daily Branch Tasks</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .tasks-page {
+            width: min(900px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .tasks-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .tasks-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .tasks-header h1 span {
+            color: #28c7ff;
+        }
+
+        .tasks-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            padding: 18px;
+
+            background:
+                rgba(13,21,38,.78);
+
+            border:
+                1px solid
+                rgba(80,180,255,.16);
+
+            border-radius: 17px;
+        }
+
+        .stat-card span {
+            display: block;
+            color: #8e9bb2;
+            font-size: 11px;
+        }
+
+        .stat-card strong {
+            display: block;
+            margin-top: 8px;
+            color: #28c7ff;
+            font-size: 24px;
+        }
+
+        .task-card {
+            padding: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 22px;
+
+            margin-bottom: 15px;
+        }
+
+        .task-card h2 {
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            padding: 14px 0;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.06);
+        }
+
+        .task-item:last-child {
+            border-bottom: 0;
+        }
+
+        .task-item input {
+            width: 20px;
+            height: 20px;
+            accent-color: #28c7ff;
+            cursor: pointer;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-content strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .task-content small {
+            display: block;
+            margin-top: 4px;
+            color: #8e9bb2;
+            font-size: 11px;
+        }
+
+        .task-item.completed strong {
+            text-decoration: line-through;
+            opacity: .5;
+        }
+
+        .progress-wrap {
+            margin-top: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            color: #8e9bb2;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 10px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+
+            background: #28c7ff;
+
+            border-radius: 20px;
+
+            transition: .3s;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 11px 15px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 11px;
+
+            background:
+                rgba(40,199,255,.08);
+
+            color: #28c7ff;
+
+            cursor: pointer;
+        }
+
+        .action-btn.danger {
+            color: #ff8d8d;
+            border-color:
+                rgba(255,80,80,.18);
+        }
+
+        @media (max-width: 600px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="tasks-page">
+
+
+    <!-- HEADER -->
+
+    <header class="tasks-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Banker Mode
+        </button>
+
+        <span class="eyebrow">
+            NEO BANKER TOOL
+        </span>
+
+        <h1>
+            Daily <span>Tasks</span>
+        </h1>
+
+        <p>
+            Track your daily branch work and
+            keep a simple record of completed
+            and pending tasks.
+        </p>
+
+    </header>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <span>
+                TOTAL TASKS
+            </span>
+
+            <strong id="totalTasks">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span>
+                COMPLETED
+            </span>
+
+            <strong id="completedTasks">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span>
+                PENDING
+            </span>
+
+            <strong id="pendingTasks">
+                0
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- TASK LIST -->
+
+    <section class="task-card">
+
+        <h2>
+            Today's Branch Checklist
+        </h2>
+
+
+        <div id="taskList">
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Opening Branch"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Opening Branch
+                    </strong>
+
+                    <small>
+                        Complete opening and initial operational checks.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Cash Verification"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Cash Verification
+                    </strong>
+
+                    <small>
+                        Verify cash position according to approved procedure.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Customer Requests"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Customer Requests
+                    </strong>
+
+                    <small>
+                        Review and process pending customer requests.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="KYC Review"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        KYC Review
+                    </strong>
+
+                    <small>
+                        Review pending KYC-related work as per policy.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Loan Work"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Loan Work
+                    </strong>
+
+                    <small>
+                        Review pending loan processing and documentation.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Collection Follow-up"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Collection Follow-up
+                    </strong>
+
+                    <small>
+                        Review scheduled customer follow-ups.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Reports"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Reports
+                    </strong>
+
+                    <small>
+                        Complete required branch reports and records.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Pending Items"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Pending Items
+                    </strong>
+
+                    <small>
+                        Review unresolved items before closing.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <label class="task-item">
+
+                <input
+                    type="checkbox"
+                    data-task="Closing Checks"
+                    onchange="updateTasks()"
+                >
+
+                <div class="task-content">
+
+                    <strong>
+                        Closing Checks
+                    </strong>
+
+                    <small>
+                        Complete end-of-day checks according to procedure.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="progress-wrap">
+
+            <div class="progress-info">
+
+                <span>
+                    Daily Progress
+                </span>
+
+                <span id="progressText">
+                    0%
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    id="progressFill"
+                    class="progress-fill"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <button
+                class="action-btn"
+                onclick="resetTasks()"
+            >
+                Reset Today
+            </button>
+
+
+            <button
+                class="action-btn danger"
+                onclick="clearSavedTasks()"
+            >
+                Clear Saved Data
+            </button>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+
+    const STORAGE_KEY =
+        "neo_daily_branch_tasks";
+
+
+    /* ==============================
+       SAVE TASKS
+    ============================== */
+
+    function saveTasks() {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "#taskList input[type='checkbox']"
+            );
+
+
+        const data = {};
+
+
+        checkboxes.forEach(
+            checkbox => {
+
+                data[
+                    checkbox.dataset.task
+                ] =
+                    checkbox.checked;
+
+            }
+        );
+
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(data)
+        );
+
+    }
+
+
+    /* ==============================
+       LOAD TASKS
+    ============================== */
+
+    function loadTasks() {
+
+        const saved =
+            localStorage.getItem(
+                STORAGE_KEY
+            );
+
+
+        if (!saved) {
+
+            updateTasks();
+
+            return;
+
+        }
+
+
+        try {
+
+            const data =
+                JSON.parse(saved);
+
+
+            const checkboxes =
+                document.querySelectorAll(
+                    "#taskList input[type='checkbox']"
+                );
+
+
+            checkboxes.forEach(
+                checkbox => {
+
+                    checkbox.checked =
+                        Boolean(
+                            data[
+                                checkbox.dataset.task
+                            ]
+                        );
+
+                }
+            );
+
+        } catch {
+
+            localStorage.removeItem(
+                STORAGE_KEY
+            );
+
+        }
+
+
+        updateTasks();
+
+    }
+
+
+    /* ==============================
+       UPDATE
+    ============================== */
+
+    function updateTasks() {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "#taskList input[type='checkbox']"
+            );
+
+
+        const total =
+            checkboxes.length;
+
+
+        let completed =
+            0;
+
+
+        checkboxes.forEach(
+            checkbox => {
+
+                const item =
+                    checkbox.closest(
+                        ".task-item"
+                    );
+
+
+                if (
+                    checkbox.checked
+                ) {
+
+                    completed++;
+
+                    item.classList.add(
+                        "completed"
+                    );
+
+                } else {
+
+                    item.classList.remove(
+                        "completed"
+                    );
+
+                }
+
+            }
+        );
+
+
+        const pending =
+            total -
+            completed;
+
+
+        const percentage =
+            total === 0
+                ? 0
+                : Math.round(
+                    (
+                        completed /
+                        total
+                    ) * 100
+                );
+
+
+        document.getElementById(
+            "totalTasks"
+        ).textContent =
+            total;
+
+
+        document.getElementById(
+            "completedTasks"
+        ).textContent =
+            completed;
+
+
+        document.getElementById(
+            "pendingTasks"
+        ).textContent =
+            pending;
+
+
+        document.getElementById(
+            "progressText"
+        ).textContent =
+            percentage + "%";
+
+
+        document.getElementById(
+            "progressFill"
+        ).style.width =
+            percentage + "%";
+
+
+        saveTasks();
+
+    }
+
+
+    /* ==============================
+       RESET
+    ============================== */
+
+    function resetTasks() {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "#taskList input[type='checkbox']"
+            );
+
+
+        checkboxes.forEach(
+            checkbox => {
+
+                checkbox.checked =
+                    false;
+
+            }
+        );
+
+
+        updateTasks();
+
+    }
+
+
+    /* ==============================
+       CLEAR SAVED DATA
+    ============================== */
+
+    function clearSavedTasks() {
+
+        const confirmClear =
+            confirm(
+                "Clear all saved task data?"
+            );
+
+
+        if (!confirmClear) {
+            return;
+        }
+
+
+        localStorage.removeItem(
+            STORAGE_KEY
+        );
+
+
+        resetTasks();
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "banker.html";
+
+    }
+
+
+    /* ==============================
+       INIT
+    ============================== */
+
+    loadTasks();
+
+
+</script>
+
+
+</body>
+
+</html>
