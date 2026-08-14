@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#070b14">
+    <meta name="description" content="NEO - AI Workspace for Students and Bankers">
+    <title>NEO | AI Workspace</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+
+    <div id="appLoader">
+        <div class="loader-logo">N</div>
+        <h1>NEO</h1>
+        <p>Initializing workspace...</p>
+    </div>
+
+    <div id="app" class="hidden">
+
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-icon">N</div>
+                <div>
+                    <h1>NEO</h1>
+                    <span>AI Workspace</span>
+                </div>
+            </div>
+
+            <button class="notification-btn" onclick="openNotifications()">
+                🔔
+            </button>
+        </header>
+
+        <main>
+
+            <section class="hero">
+                <span class="eyebrow">YOUR INTELLIGENT WORKSPACE</span>
+
+                <h2>
+                    Welcome to <span>NEO</span>
+                </h2>
+
+                <p>
+                    Study smarter, work faster and manage
+                    everything from one intelligent workspace.
+                </p>
+
+                <div class="hero-buttons">
+                    <button class="primary-btn" onclick="openAI()">
+                        ✦ Open AI Copilot
+                    </button>
+
+                    <button class="secondary-btn" onclick="showTools()">
+                        Explore Tools
+                    </button>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <span>WORKSPACE</span>
+                    <h3>Choose your mode</h3>
+                </div>
+
+                <div class="mode-grid">
+
+                    <button class="mode-card" onclick="studentMode()">
+                        <div class="mode-icon">🎓</div>
+
+                        <div>
+                            <h4>Student Mode</h4>
+                            <p>
+                                Study, exams, skills,
+                                resume and career.
+                            </p>
+                        </div>
+
+                        <b>→</b>
+                    </button>
+
+                    <button class="mode-card" onclick="bankerMode()">
+                        <div class="mode-icon">🏦</div>
+
+                        <div>
+                            <h4>Banker Mode</h4>
+                            <p>
+                                Banking tools, Excel,
+                                reports and work.
+                            </p>
+                        </div>
+
+                        <b>→</b>
+                    </button>
+
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <span>QUICK ACCESS</span>
+                    <h3>What do you need?</h3>
+                </div>
+
+                <div class="quick-grid">
+
+                    <button onclick="openAI()" class="quick-card">
+                        <span>✦</span>
+                        <strong>AI Copilot</strong>
+                        <small>Ask anything</small>
+                    </button>
+
+                    <button onclick="showTools()" class="quick-card">
+                        <span>🧰</span>
+                        <strong>Smart Tools</strong>
+                        <small>Useful tools</small>
+                    </button>
+
+                    <button onclick="studentMode()" class="quick-card">
+                        <span>📚</span>
+                        <strong>Study</strong>
+                        <small>Learn & practice</small>
+                    </button>
+
+                    <button onclick="showTasks()" class="quick-card">
+                        <span>✓</span>
+                        <strong>Tasks</strong>
+                        <small>Stay organized</small>
+                    </button>
+
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-title">
+                    <span>NEO FEATURES</span>
+                    <h3>Everything in one place</h3>
+                </div>
+
+                <div class="feature-grid">
+
+                    <div class="feature-card">
+                        <span>✦</span>
+                        <h4>AI Copilot</h4>
+                        <p>Intelligent help for study and work.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span>📄</span>
+                        <h4>PDF Intelligence</h4>
+                        <p>Convert documents into useful notes.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span>📊</span>
+                        <h4>Excel Helper</h4>
+                        <p>Formulas and spreadsheet assistance.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span>🔔</span>
+                        <h4>Notifications</h4>
+                        <p>Never miss important reminders.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span>💼</span>
+                        <h4>Career Tools</h4>
+                        <p>Resume and interview preparation.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span>📈</span>
+                        <h4>Progress</h4>
+                        <p>Track learning and productivity.</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="dashboard-card">
+
+                    <div class="dashboard-title">
+                        <div>
+                            <span>TODAY</span>
+                            <h3>Your workspace</h3>
+                        </div>
+
+                        <strong>● Active</strong>
+                    </div>
+
+                    <div class="stats-grid">
+
+                        <div>
+                            <b>0</b>
+                            <small>Tasks</small>
+                        </div>
+
+                        <div>
+                            <b>0</b>
+                            <small>Study Sessions</small>
+                        </div>
+
+                        <div>
+                            <b>0</b>
+                            <small>AI Chats</small>
+                        </div>
+
+                        <div>
+                            <b>0</b>
+                            <small>Day Streak</small>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+
+            <button onclick="goHome()">
+                <span>⌂</span>
+                Home
+            </button>
+
+            <button onclick="studentMode()">
+                <span>🎓</span>
+                Student
+            </button>
+
+            <button class="ai-button" onclick="openAI()">
+                ✦
+                <small>AI</small>
+            </button>
+
+            <button onclick="bankerMode()">
+                <span>🏦</span>
+                Banker
+            </button>
+
+            <button onclick="openProfile()">
+                <span>👤</span>
+                Profile
+            </button>
+
+        </nav>
+
+        <div id="aiModal" class="modal">
+
+            <div class="modal-box">
+
+                <button class="close-btn" onclick="closeAI()">×</button>
+
+                <div class="ai-icon">✦</div>
+
+                <h3>NEO AI Copilot</h3>
+
+                <p>
+                    Ask NEO anything about study,
+                    banking, Excel or career.
+                </p>
+
+                <input
+                    id="aiInput"
+                    type="text"
+                    placeholder="Ask NEO..."
+                >
+
+                <button class="primary-btn" onclick="sendAI()">
+                    Ask NEO
+                </button>
+
+                <div id="aiResponse"></div>
+
+            </div>
+        </div>
+
+        <div id="notificationPanel" class="panel">
+
+            <button class="close-btn" onclick="closeNotifications()">
+                ×
+            </button>
+
+            <h3>Notifications</h3>
+
+            <p>You're all caught up.</p>
+
+        </div>
+
+        <div id="profilePanel" class="panel">
+
+            <button class="close-btn" onclick="closeProfile()">
+                ×
+            </button>
+
+            <h3>Your Profile</h3>
+
+            <p>NEO User</p>
+
+            <button>⚙️ Settings</button>
+            <button>🔔 Notification Settings</button>
+            <button>🔒 Privacy</button>
+
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
