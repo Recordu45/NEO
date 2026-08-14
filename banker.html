@@ -254,7 +254,7 @@
     <section class="banker-grid">
 
 
-        <!-- EMI -->
+        <!-- 1. EMI -->
 
         <button
             class="banker-card working"
@@ -285,7 +285,7 @@
         </button>
 
 
-        <!-- CASH DENOMINATION -->
+        <!-- 2. CASH DENOMINATION -->
 
         <button
             class="banker-card working"
@@ -316,7 +316,7 @@
         </button>
 
 
-        <!-- DPD -->
+        <!-- 3. DPD -->
 
         <button
             class="banker-card working"
@@ -347,7 +347,7 @@
         </button>
 
 
-        <!-- LOAN TOOLS -->
+        <!-- 4. LOAN TOOLS -->
 
         <button
             class="banker-card working"
@@ -378,7 +378,7 @@
         </button>
 
 
-        <!-- EXCEL HELPER -->
+        <!-- 5. EXCEL HELPER -->
 
         <button
             class="banker-card working"
@@ -409,7 +409,7 @@
         </button>
 
 
-        <!-- REPORT GENERATOR -->
+        <!-- 6. REPORT GENERATOR -->
 
         <button
             class="banker-card working"
@@ -440,11 +440,11 @@
         </button>
 
 
-        <!-- BANKING TERMS -->
+        <!-- 7. BANKING TERMS -->
 
         <button
-            class="banker-card"
-            onclick="comingSoon('Banking Terms')"
+            class="banker-card working"
+            onclick="openBankingTerms()"
         >
 
             <div class="card-icon">
@@ -456,18 +456,22 @@
             </h3>
 
             <p>
-                Simple explanations for banking,
-                lending and compliance concepts.
+                Search banking, lending, KYC
+                and compliance terminology.
             </p>
 
+            <span class="status">
+                ● WORKING
+            </span>
+
             <span class="open">
-                Open →
+                Open Banking Terms →
             </span>
 
         </button>
 
 
-        <!-- DAILY TASKS -->
+        <!-- 8. DAILY BRANCH TASKS -->
 
         <button
             class="banker-card"
@@ -504,7 +508,7 @@
 
 
     /* ==============================
-       BACK TO NEO
+       BACK
     ============================== */
 
     function goBack() {
@@ -583,6 +587,18 @@
 
         window.location.href =
             "report-generator.html";
+
+    }
+
+
+    /* ==============================
+       BANKING TERMS
+    ============================== */
+
+    function openBankingTerms() {
+
+        window.location.href =
+            "banking-terms.html";
 
     }
 
