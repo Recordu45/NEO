@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Study Planner</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .planner-page {
+            width: min(950px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .planner-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .planner-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .planner-header h1 span {
+            color: #28c7ff;
+        }
+
+        .planner-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .planner-card {
+            padding: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 22px;
+
+            margin-bottom: 20px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+        }
+
+        .input-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            color: #cbd5e5;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,.25);
+
+            color: white;
+
+            font-size: 14px;
+        }
+
+        select option {
+            color: black;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 11px 16px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.2);
+
+            border-radius: 10px;
+
+            background:
+                rgba(40,199,255,.08);
+
+            color: #28c7ff;
+
+            cursor: pointer;
+        }
+
+        .btn.primary {
+            background: #28c7ff;
+            color: #00121a;
+            border-color: #28c7ff;
+            font-weight: 800;
+        }
+
+        .btn.danger {
+            color: #ff8d8d;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .planner-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .plan-item {
+            padding: 18px;
+
+            background:
+                rgba(13,21,38,.78);
+
+            border:
+                1px solid
+                rgba(80,180,255,.16);
+
+            border-radius: 17px;
+        }
+
+        .plan-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .plan-top h3 {
+            color: #28c7ff;
+            font-size: 17px;
+        }
+
+        .plan-meta {
+            margin-top: 8px;
+
+            color: #8e9bb2;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        .priority {
+            font-size: 10px;
+            padding: 5px 8px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .priority.high {
+            color: #ff8d8d;
+            background: rgba(255,80,80,.08);
+        }
+
+        .priority.medium {
+            color: #ffd27a;
+            background: rgba(255,190,80,.08);
+        }
+
+        .priority.low {
+            color: #42e6a4;
+            background: rgba(66,230,164,.08);
+        }
+
+        .empty {
+            padding: 30px;
+            text-align: center;
+            color: #64748b;
+
+            border:
+                1px dashed
+                rgba(80,180,255,.15);
+
+            border-radius: 17px;
+        }
+
+        @media (max-width: 650px) {
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group.full {
+                grid-column: auto;
+            }
+
+            .plan-top {
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="planner-page">
+
+
+    <!-- HEADER -->
+
+    <header class="planner-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Student Mode
+        </button>
+
+        <span class="eyebrow">
+            NEO STUDENT TOOL
+        </span>
+
+        <h1>
+            Study <span>Planner</span>
+        </h1>
+
+        <p>
+            Plan your subjects, study sessions and
+            daily learning schedule.
+        </p>
+
+    </header>
+
+
+    <!-- ADD PLAN -->
+
+    <section class="planner-card">
+
+        <h2>
+            Add Study Session
+        </h2>
+
+        <br>
+
+        <div class="input-grid">
+
+
+            <div class="input-group">
+
+                <label>
+                    Subject
+                </label>
+
+                <input
+                    id="subject"
+                    placeholder="Example: History"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    id="date"
+                    type="date"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Start Time
+                </label>
+
+                <input
+                    id="time"
+                    type="time"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Duration
+                </label>
+
+                <select id="duration">
+
+                    <option value="30">
+                        30 minutes
+                    </option>
+
+                    <option value="45">
+                        45 minutes
+                    </option>
+
+                    <option value="60">
+                        1 hour
+                    </option>
+
+                    <option value="90">
+                        1.5 hours
+                    </option>
+
+                    <option value="120">
+                        2 hours
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Priority
+                </label>
+
+                <select id="priority">
+
+                    <option value="high">
+                        High
+                    </option>
+
+                    <option value="medium" selected>
+                        Medium
+                    </option>
+
+                    <option value="low">
+                        Low
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Topic
+                </label>
+
+                <input
+                    id="topic"
+                    placeholder="Chapter / topic"
+                >
+
+            </div>
+
+
+            <div class="input-group full">
+
+                <label>
+                    Notes
+                </label>
+
+                <textarea
+                    id="notes"
+                    placeholder="What do you want to complete in this session?"
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="btn primary"
+                onclick="addPlan()"
+            >
+                Add to Planner
+            </button>
+
+            <button
+                class="btn"
+                onclick="clearForm()"
+            >
+                Clear
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- PLAN LIST -->
+
+    <section class="planner-card">
+
+        <h2>
+            My Study Plan
+        </h2>
+
+        <br>
+
+        <div
+            id="plannerList"
+            class="planner-list"
+        ></div>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+
+    const STORAGE_KEY =
+        "neo_study_planner";
+
+
+    /* ==============================
+       GET PLANS
+    ============================== */
+
+    function getPlans() {
+
+        try {
+
+            return JSON.parse(
+                localStorage.getItem(
+                    STORAGE_KEY
+                )
+            ) || [];
+
+        } catch {
+
+            return [];
+
+        }
+
+    }
+
+
+    /* ==============================
+       SAVE PLANS
+    ============================== */
+
+    function savePlans(plans) {
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(plans)
+        );
+
+    }
+
+
+    /* ==============================
+       ADD PLAN
+    ============================== */
+
+    function addPlan() {
+
+        const subject =
+            document.getElementById(
+                "subject"
+            ).value.trim();
+
+        const date =
+            document.getElementById(
+                "date"
+            ).value;
+
+        const time =
+            document.getElementById(
+                "time"
+            ).value;
+
+        const duration =
+            document.getElementById(
+                "duration"
+            ).value;
+
+        const priority =
+            document.getElementById(
+                "priority"
+            ).value;
+
+        const topic =
+            document.getElementById(
+                "topic"
+            ).value.trim();
+
+        const notes =
+            document.getElementById(
+                "notes"
+            ).value.trim();
+
+
+        if (!subject) {
+
+            alert(
+                "Please enter a subject."
+            );
+
+            return;
+
+        }
+
+
+        if (!date) {
+
+            alert(
+                "Please select a date."
+            );
+
+            return;
+
+        }
+
+
+        const plans =
+            getPlans();
+
+
+        plans.push({
+
+            id:
+                Date.now().toString(),
+
+            subject:
+                subject,
+
+            date:
+                date,
+
+            time:
+                time || "Not specified",
+
+            duration:
+                duration,
+
+            priority:
+                priority,
+
+            topic:
+                topic,
+
+            notes:
+                notes
+
+        });
+
+
+        plans.sort(
+            (a, b) =>
+                (
+                    a.date +
+                    a.time
+                )
+                .localeCompare(
+                    b.date +
+                    b.time
+                )
+        );
+
+
+        savePlans(plans);
+
+        clearForm();
+
+        renderPlans();
+
+    }
+
+
+    /* ==============================
+       RENDER
+    ============================== */
+
+    function renderPlans() {
+
+        const plans =
+            getPlans();
+
+
+        const container =
+            document.getElementById(
+                "plannerList"
+            );
+
+
+        if (!plans.length) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    No study sessions planned yet.
+
+                    <br><br>
+
+                    Add your first session above.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            plans.map(
+                plan => `
+
+                    <article
+                        class="plan-item"
+                    >
+
+                        <div class="plan-top">
+
+                            <div>
+
+                                <h3>
+                                    ${escapeHTML(
+                                        plan.subject
+                                    )}
+                                </h3>
+
+                                <div
+                                    class="plan-meta"
+                                >
+
+                                    ${formatDate(
+                                        plan.date
+                                    )}
+
+                                    •
+                                    ${escapeHTML(
+                                        plan.time
+                                    )}
+
+                                    •
+                                    ${escapeHTML(
+                                        plan.duration
+                                    )}
+                                    minutes
+
+                                    ${
+                                        plan.topic
+                                        ? `<br>Topic:
+                                           ${escapeHTML(
+                                               plan.topic
+                                           )}`
+                                        : ""
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            <span
+                                class="priority ${plan.priority}"
+                            >
+                                ${plan.priority.toUpperCase()}
+                            </span>
+
+                        </div>
+
+
+                        ${
+                            plan.notes
+                            ? `
+                                <div
+                                    class="plan-meta"
+                                    style="margin-top:12px;"
+                                >
+                                    ${escapeHTML(
+                                        plan.notes
+                                    )}
+                                </div>
+                              `
+                            : ""
+                        }
+
+
+                        <div
+                            class="actions"
+                            style="margin-top:14px;"
+                        >
+
+                            <button
+                                class="btn danger"
+                                onclick="deletePlan('${plan.id}')"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                `
+            )
+            .join("");
+
+    }
+
+
+    /* ==============================
+       DELETE
+    ============================== */
+
+    function deletePlan(id) {
+
+        const confirmed =
+            confirm(
+                "Delete this study session?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        const plans =
+            getPlans()
+            .filter(
+                plan =>
+                    plan.id !== id
+            );
+
+
+        savePlans(plans);
+
+        renderPlans();
+
+    }
+
+
+    /* ==============================
+       CLEAR FORM
+    ============================== */
+
+    function clearForm() {
+
+        document.getElementById(
+            "subject"
+        ).value = "";
+
+        document.getElementById(
+            "date"
+        ).value = "";
+
+        document.getElementById(
+            "time"
+        ).value = "";
+
+        document.getElementById(
+            "topic"
+        ).value = "";
+
+        document.getElementById(
+            "notes"
+        ).value = "";
+
+        document.getElementById(
+            "priority"
+        ).value = "medium";
+
+        document.getElementById(
+            "duration"
+        ).value = "30";
+
+    }
+
+
+    /* ==============================
+       FORMAT DATE
+    ============================== */
+
+    function formatDate(dateString) {
+
+        const date =
+            new Date(
+                dateString +
+                "T00:00:00"
+            );
+
+        return date.toLocaleDateString(
+            "en-IN",
+            {
+                weekday: "short",
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    /* ==============================
+       ESCAPE HTML
+    ============================== */
+
+    function escapeHTML(text) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "student.html";
+
+    }
+
+
+    /* ==============================
+       INIT
+    ============================== */
+
+    renderPlans();
+
+
+</script>
+
+
+</body>
+
+</html>
