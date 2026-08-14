@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050811">
+<title>NEO | Assignment Tracker</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.assignment-page{width:min(950px,100%);margin:auto;padding:25px 18px 110px}
+.assignment-header{padding:30px 0}
+.back-btn{border:1px solid rgba(80,180,255,.18);background:rgba(13,21,38,.78);color:white;padding:11px 15px;border-radius:12px;margin-bottom:25px;cursor:pointer}
+.assignment-header h1{font-size:clamp(38px,8vw,62px);margin-top:12px}
+.assignment-header h1 span{color:#28c7ff}
+.assignment-header p{color:#8e9bb2;line-height:1.6;margin-top:12px}
+.card{padding:24px;background:linear-gradient(135deg,rgba(18,31,54,.95),rgba(8,13,25,.95));border:1px solid rgba(80,180,255,.18);border-radius:22px;margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.group label{display:block;margin-bottom:7px;color:#cbd5e5;font-size:13px}
+.group input,.group select{width:100%;padding:13px 14px;border:1px solid rgba(80,180,255,.18);border-radius:12px;outline:none;background:rgba(0,0,0,.25);color:white;font-size:14px}
+.group select option{color:black}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{padding:11px 16px;border:1px solid rgba(80,180,255,.2);border-radius:10px;background:rgba(40,199,255,.08);color:#28c7ff;cursor:pointer}
+.btn.primary{background:#28c7ff;color:#00121a;border-color:#28c7ff;font-weight:800}
+.btn.danger{color:#ff8d8d}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat{padding:18px;background:rgba(13,21,38,.78);border:1px solid rgba(80,180,255,.16);border-radius:17px}
+.stat span{display:block;color:#8e9bb2;font-size:11px}.stat strong{display:block;color:#28c7ff;font-size:24px;margin-top:8px}
+.assignment-list{display:grid;gap:12px}
+.assignment{padding:18px;background:rgba(13,21,38,.78);border:1px solid rgba(80,180,255,.16);border-radius:17px}
+.assignment.completed{opacity:.65}
+.assignment.completed h3{text-decoration:line-through}
+.top{display:flex;justify-content:space-between;gap:12px}
+.assignment h3{color:#28c7ff;font-size:17px}
+.meta{margin-top:8px;color:#8e9bb2;font-size:12px;line-height:1.6}
+.badge{font-size:10px;padding:5px 8px;border-radius:8px;height:max-content}
+.high{color:#ff8d8d;background:rgba(255,80,80,.08)}
+.medium{color:#ffd27a;background:rgba(255,190,80,.08)}
+.low{color:#42e6a4;background:rgba(66,230,164,.08)}
+.empty{text-align:center;padding:30px;color:#64748b;border:1px dashed rgba(80,180,255,.15);border-radius:17px}
+.progress{height:10px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden;margin-top:14px}
+.progress span{display:block;height:100%;width:0;background:#28c7ff;border-radius:20px;transition:.3s}
+@media(max-width:650px){.form-grid,.stats{grid-template-columns:1fr}.top{align-items:flex-start}}
+</style>
+</head>
+
+<body>
+<div class="assignment-page">
+
+<header class="assignment-header">
+<button class="back-btn" onclick="goBack()">← Back to Student Mode</button>
+<span class="eyebrow">NEO STUDENT TOOL</span>
+<h1>Assignment <span>Tracker</span></h1>
+<p>Track assignments, deadlines, priorities and completed academic work.</p>
+</header>
+
+<section class="stats">
+<div class="stat"><span>TOTAL</span><strong id="total">0</strong></div>
+<div class="stat"><span>COMPLETED</span><strong id="completed">0</strong></div>
+<div class="stat"><span>PENDING</span><strong id="pending">0</strong></div>
+</section>
+
+<section class="card">
+<h2>Add Assignment</h2><br>
+
+<div class="form-grid">
+
+<div class="group">
+<label>Assignment Title</label>
+<input id="title" placeholder="Example: History Chapter 3">
+</div>
+
+<div class="group">
+<label>Subject</label>
+<input id="subject" placeholder="Example: History">
+</div>
+
+<div class="group">
+<label>Due Date</label>
+<input id="dueDate" type="date">
+</div>
+
+<div class="group">
+<label>Priority</label>
+<select id="priority">
+<option value="high">High</option>
+<option value="medium" selected>Medium</option>
+<option value="low">Low</option>
+</select>
+</div>
+
+</div>
+
+<div class="actions">
+<button class="btn primary" onclick="addAssignment()">Add Assignment</button>
+<button class="btn" onclick="clearForm()">Clear</button>
+</div>
+</section>
+
+<section class="card">
+<h2>Progress</h2>
+<div class="progress"><span id="progressBar"></span></div>
+<p id="progressText" style="color:#8e9bb2;font-size:12px;margin-top:8px">0% completed</p>
+</section>
+
+<section class="card">
+<h2>My Assignments</h2><br>
+<div id="assignmentList" class="assignment-list"></div>
+</section>
+
+</div>
+
+<script>
+const STORAGE_KEY="neo_assignments";
+
+function getAssignments(){
+    try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY))||[];
+    }catch{
+        return [];
+    }
+}
+
+function saveAssignments(data){
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+}
+
+function addAssignment(){
+    const title=document.getElementById("title").value.trim();
+    const subject=document.getElementById("subject").value.trim();
+    const dueDate=document.getElementById("dueDate").value;
+    const priority=document.getElementById("priority").value;
+
+    if(!title){alert("Please enter assignment title.");return}
+    if(!subject){alert("Please enter subject.");return}
+    if(!dueDate){alert("Please select due date.");return}
+
+    const data=getAssignments();
+
+    data.push({
+        id:Date.now().toString(),
+        title,
+        subject,
+        dueDate,
+        priority,
+        completed:false
+    });
+
+    data.sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
+    saveAssignments(data);
+    clearForm();
+    render();
+}
+
+function toggleAssignment(id){
+    const data=getAssignments();
+    const item=data.find(x=>x.id===id);
+    if(!item)return;
+    item.completed=!item.completed;
+    saveAssignments(data);
+    render();
+}
+
+function deleteAssignment(id){
+    if(!confirm("Delete this assignment?"))return;
+    const data=getAssignments().filter(x=>x.id!==id);
+    saveAssignments(data);
+    render();
+}
+
+function render(){
+    const data=getAssignments();
+    const list=document.getElementById("assignmentList");
+
+    const total=data.length;
+    const completed=data.filter(x=>x.completed).length;
+    const pending=total-completed;
+    const percent=total?Math.round(completed/total*100):0;
+
+    document.getElementById("total").textContent=total;
+    document.getElementById("completed").textContent=completed;
+    document.getElementById("pending").textContent=pending;
+    document.getElementById("progressBar").style.width=percent+"%";
+    document.getElementById("progressText").textContent=percent+"% completed";
+
+    if(!data.length){
+        list.innerHTML='<div class="empty">No assignments added yet.<br><br>Add your first assignment above.</div>';
+        return;
+    }
+
+    list.innerHTML=data.map(item=>`
+        <article class="assignment ${item.completed?"completed":""}">
+            <div class="top">
+                <div>
+                    <h3>${escapeHTML(item.title)}</h3>
+                    <div class="meta">
+                        Subject: ${escapeHTML(item.subject)}<br>
+                        Due: ${formatDate(item.dueDate)}
+                    </div>
+                </div>
+                <span class="badge ${item.priority}">
+                    ${item.priority.toUpperCase()}
+                </span>
+            </div>
+
+            <div class="actions">
+                <button class="btn" onclick="toggleAssignment('${item.id}')">
+                    ${item.completed?"Mark Pending":"Mark Completed"}
+                </button>
+                <button class="btn danger" onclick="deleteAssignment('${item.id}')">
+                    Delete
+                </button>
+            </div>
+        </article>
+    `).join("");
+}
+
+function clearForm(){
+    document.getElementById("title").value="";
+    document.getElementById("subject").value="";
+    document.getElementById("dueDate").value="";
+    document.getElementById("priority").value="medium";
+}
+
+function formatDate(value){
+    const date=new Date(value+"T00:00:00");
+    return date.toLocaleDateString("en-IN",{
+        weekday:"short",
+        day:"2-digit",
+        month:"short",
+        year:"numeric"
+    });
+}
+
+function escapeHTML(text){
+    const div=document.createElement("div");
+    div.textContent=text;
+    return div.innerHTML;
+}
+
+function goBack(){
+    window.location.href="student.html";
+}
+
+render();
+</script>
+</body>
+</html>
