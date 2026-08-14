@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050811">
+<title>NEO | Career Tools</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.career-page{width:min(1000px,100%);margin:auto;padding:25px 18px 110px}.career-header{padding:30px 0}.back-btn{border:1px solid rgba(80,180,255,.18);background:rgba(13,21,38,.78);color:white;padding:11px 15px;border-radius:12px;margin-bottom:25px;cursor:pointer}.career-header h1{font-size:clamp(38px,8vw,62px);margin-top:12px}.career-header h1 span{color:#28c7ff}.career-header p{color:#8e9bb2;line-height:1.6;margin-top:12px}.career-card{padding:24px;background:linear-gradient(135deg,rgba(18,31,54,.95),rgba(8,13,25,.95));border:1px solid rgba(80,180,255,.18);border-radius:22px;margin-bottom:20px}.input-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.input-group.full{grid-column:1/-1}.input-group label{display:block;margin-bottom:7px;color:#cbd5e5;font-size:13px}.input-group input,.input-group textarea{width:100%;padding:13px 14px;border:1px solid rgba(80,180,255,.18);border-radius:12px;outline:none;background:rgba(0,0,0,.25);color:white;font-size:14px}.input-group textarea{min-height:110px;resize:vertical;line-height:1.6}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{padding:11px 16px;border:1px solid rgba(80,180,255,.2);border-radius:10px;background:rgba(40,199,255,.08);color:#28c7ff;cursor:pointer}.btn.primary{background:#28c7ff;color:#00121a;border-color:#28c7ff;font-weight:800}.resume-output{display:none}.resume-output.active{display:block}.resume-paper{background:white;color:#111827;padding:35px;border-radius:15px;line-height:1.55}.resume-name{font-size:30px;font-weight:800}.resume-role{color:#475569;margin-top:4px}.resume-contact{margin-top:10px;color:#475569;font-size:13px}.resume-section{margin-top:24px}.resume-section h3{font-size:15px;border-bottom:1px solid #cbd5e1;padding-bottom:5px;margin-bottom:8px}.resume-section p{white-space:pre-wrap}.tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.tool-box{padding:20px;background:rgba(13,21,38,.78);border:1px solid rgba(80,180,255,.16);border-radius:18px}.tool-box h3{color:#28c7ff}.tool-box p{color:#8e9bb2;margin-top:8px;font-size:13px;line-height:1.6}.skill-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.skill{padding:7px 10px;border-radius:9px;background:rgba(40,199,255,.08);color:#28c7ff;font-size:11px}.roadmap{display:grid;gap:10px;margin-top:15px}.roadmap-item{padding:15px;border-left:3px solid #28c7ff;background:rgba(255,255,255,.03);border-radius:8px}.roadmap-item strong{display:block;color:#fff}.roadmap-item span{display:block;margin-top:4px;color:#8e9bb2;font-size:12px}.interview-box{display:none;margin-top:15px}.interview-box.active{display:block}.question-box{padding:18px;background:rgba(0,0,0,.2);border:1px solid rgba(80,180,255,.12);border-radius:14px;margin-bottom:10px}.question-box strong{color:#28c7ff}@media(max-width:650px){.input-grid,.tool-grid{grid-template-columns:1fr}.input-group.full{grid-column:auto}.resume-paper{padding:22px}}@media print{body *{visibility:hidden}.resume-paper,.resume-paper *{visibility:visible}.resume-paper{position:absolute;left:0;top:0;width:100%;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="career-page">
+<header class="career-header">
+<button class="back-btn" onclick="goBack()">← Back to Student Mode</button>
+<span class="eyebrow">NEO STUDENT TOOL</span>
+<h1>Career <span>Tools</span></h1>
+<p>Build your resume, prepare for interviews, identify useful skills and create a career roadmap.</p>
+</header>
+<section class="career-card">
+<h2>Resume Builder</h2><br>
+<div class="input-grid">
+<div class="input-group"><label>Full Name</label><input id="fullName" placeholder="Your name"></div>
+<div class="input-group"><label>Target Role</label><input id="targetRole" placeholder="Example: Bank Operations Executive"></div>
+<div class="input-group"><label>Email</label><input id="email" type="email" placeholder="your@email.com"></div>
+<div class="input-group"><label>Phone</label><input id="phone" placeholder="Phone number"></div>
+<div class="input-group full"><label>Professional Summary</label><textarea id="summary" placeholder="Write a short professional summary..."></textarea></div>
+<div class="input-group full"><label>Education</label><textarea id="education" placeholder="Example: BA Hindi, University, Year"></textarea></div>
+<div class="input-group full"><label>Experience</label><textarea id="experience" placeholder="Job title, company, responsibilities..."></textarea></div>
+<div class="input-group full"><label>Skills</label><textarea id="skills" placeholder="Excel, Communication, Banking Operations, etc."></textarea></div>
+</div>
+<div class="actions"><button class="btn primary" onclick="generateResume()">Generate Resume</button><button class="btn" onclick="clearResumeForm()">Clear</button></div>
+</section>
+<section id="resumeOutput" class="career-card resume-output">
+<div id="resumePaper" class="resume-paper"></div>
+<div class="actions"><button class="btn primary" onclick="printResume()">Print / Save PDF</button><button class="btn" onclick="copyResume()">Copy Resume</button></div>
+</section>
+<section class="career-card">
+<h2>Career Toolkit</h2>
+<div class="tool-grid">
+<div class="tool-box"><h3>Important Skills</h3><p>Skills that can help students become more job-ready.</p><div class="skill-list"><span class="skill">MS Excel</span><span class="skill">Communication</span><span class="skill">English</span><span class="skill">Computer Basics</span><span class="skill">Problem Solving</span><span class="skill">Interview Skills</span></div></div>
+<div class="tool-box"><h3>Career Roadmap</h3><div class="roadmap"><div class="roadmap-item"><strong>Step 1: Build Skills</strong><span>Learn Excel, communication, computer and domain skills.</span></div><div class="roadmap-item"><strong>Step 2: Build Resume</strong><span>Create a clear resume based on your education and skills.</span></div><div class="roadmap-item"><strong>Step 3: Practice Interviews</strong><span>Practice HR, technical and role-specific questions.</span></div><div class="roadmap-item"><strong>Step 4: Apply</strong><span>Apply for suitable jobs and track applications.</span></div></div></div>
+</div>
+</section>
+<section class="career-card">
+<h2>Interview Preparation</h2><p style="color:#8e9bb2;line-height:1.6">Practice common interview questions before your next interview.</p>
+<button class="btn primary" onclick="showInterview()">Show Questions</button>
+<div id="interviewBox" class="interview-box">
+<div class="question-box"><strong>1. Tell me about yourself.</strong><p>Keep your answer short and focus on education, relevant skills, experience and career goal.</p></div>
+<div class="question-box"><strong>2. Why should we hire you?</strong><p>Explain the skills and experience you can bring to the role.</p></div>
+<div class="question-box"><strong>3. What are your strengths?</strong><p>Mention genuine strengths that are relevant to the job.</p></div>
+<div class="question-box"><strong>4. What is your career goal?</strong><p>Explain a realistic professional direction and how you plan to grow.</p></div>
+<div class="question-box"><strong>5. Why do you want this job?</strong><p>Connect your skills and interests with the requirements of the role.</p></div>
+</div>
+</section>
+</div>
+<script>
+function goBack(){window.location.href="student.html"}
+function escapeHTML(text){const div=document.createElement("div");div.textContent=text;return div.innerHTML}
+function generateResume(){
+const name=document.getElementById("fullName").value.trim(),role=document.getElementById("targetRole").value.trim(),email=document.getElementById("email").value.trim(),phone=document.getElementById("phone").value.trim(),summary=document.getElementById("summary").value.trim(),education=document.getElementById("education").value.trim(),experience=document.getElementById("experience").value.trim(),skills=document.getElementById("skills").value.trim();
+if(!name){alert("Please enter your name.");return} if(!role){alert("Please enter your target role.");return}
+const skillsHTML=skills?skills.split(",").map(skill=>`<span style="display:inline-block;margin:3px 5px 3px 0;padding:5px 9px;background:#e2e8f0;border-radius:6px;font-size:12px">${escapeHTML(skill.trim())}</span>`).join(""):"Not specified";
+document.getElementById("resumePaper").innerHTML=`<div class="resume-name">${escapeHTML(name)}</div><div class="resume-role">${escapeHTML(role)}</div><div class="resume-contact">${escapeHTML(email)}${email&&phone?" • ":""}${escapeHTML(phone)}</div><div class="resume-section"><h3>PROFESSIONAL SUMMARY</h3><p>${escapeHTML(summary||"Add your professional summary.")}</p></div><div class="resume-section"><h3>EDUCATION</h3><p>${escapeHTML(education||"Add your education details.")}</p></div><div class="resume-section"><h3>EXPERIENCE</h3><p>${escapeHTML(experience||"Add your experience details.")}</p></div><div class="resume-section"><h3>SKILLS</h3><div>${skillsHTML}</div></div>`;
+document.getElementById("resumeOutput").classList.add("active");document.getElementById("resumeOutput").scrollIntoView({behavior:"smooth"});
+}
+function clearResumeForm(){document.querySelectorAll(".input-group input,.input-group textarea").forEach(field=>field.value="");document.getElementById("resumeOutput").classList.remove("active")}
+function printResume(){window.print()}
+async function copyResume(){const text=document.getElementById("resumePaper").innerText;try{await navigator.clipboard.writeText(text);alert("Resume copied successfully.")}catch{alert("Copy failed. Please copy manually.")}}
+function showInterview(){document.getElementById("interviewBox").classList.toggle("active")}
+</script>
+</body>
+</html>
