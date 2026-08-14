@@ -1,84 +1,68 @@
-const CACHE_NAME = "neo-v1";
+const CACHE_NAME = "neo-v2";
 
 const APP_FILES = [
     "./",
     "./index.html",
     "./style.css",
     "./app.js",
-    "./manifest.json"
+    "./manifest.json",
+    "./student.html",
+    "./banker.html"
 ];
-
-
-/* ==============================
-   INSTALL
-============================== */
 
 self.addEventListener("install", (event) => {
 
     event.waitUntil(
-
         caches.open(CACHE_NAME)
-            .then((cache) => {
-
-                return cache.addAll(APP_FILES);
-
-            })
-
+            .then((cache) => cache.addAll(APP_FILES))
     );
 
     self.skipWaiting();
-
 });
 
-
-/* ==============================
-   ACTIVATE
-============================== */
 
 self.addEventListener("activate", (event) => {
 
     event.waitUntil(
 
-        caches.keys()
-            .then((cacheNames) => {
+        caches.keys().then((cacheNames) => {
 
-                return Promise.all(
+            return Promise.all(
 
-                    cacheNames
-                        .filter(
-                            (name) => name !== CACHE_NAME
-                        )
-                        .map(
-                            (name) => caches.delete(name)
-                        )
+                cacheNames
+                    .filter((name) => name !== CACHE_NAME)
+                    .map((name) => caches.delete(name))
 
-                );
+            );
 
-            })
+        })
 
     );
 
     self.clients.claim();
-
 });
 
-
-/* ==============================
-   FETCH
-============================== */
 
 self.addEventListener("fetch", (event) => {
 
     event.respondWith(
 
-        caches.match(event.request)
-            .then((cachedResponse) => {
+        fetch(event.request)
+            .then((response) => {
 
-                if (cachedResponse) {
-                    return cachedResponse;
-                }
+                const copy = response.clone();
 
-                return fetch(event.request);
+                caches.open(CACHE_NAME)
+                    .then((cache) => {
+                        cache.put(event.request, copy);
+                    });
+
+                return response;
+
+            })
+            .catch(() => {
+
+                return caches.match(event.request);
 
             })
 
