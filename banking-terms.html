@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Banking Terms</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .terms-page {
+            width: min(1000px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .terms-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .terms-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .terms-header h1 span {
+            color: #28c7ff;
+        }
+
+        .terms-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 14px;
+
+            outline: none;
+
+            background:
+                rgba(13,21,38,.78);
+
+            color: white;
+
+            font-size: 15px;
+        }
+
+        .search-box input:focus {
+            border-color: #28c7ff;
+        }
+
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .term-card {
+            padding: 20px;
+
+            background:
+                rgba(13,21,38,.78);
+
+            border:
+                1px solid
+                rgba(80,180,255,.16);
+
+            border-radius: 18px;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .term-card:hover {
+            transform: translateY(-3px);
+
+            border-color:
+                rgba(40,199,255,.45);
+        }
+
+        .term-card h3 {
+            color: #28c7ff;
+            font-size: 18px;
+        }
+
+        .term-card p {
+            margin-top: 8px;
+
+            color: #8e9bb2;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .category {
+            display: inline-block;
+
+            margin-top: 12px;
+
+            padding: 5px 9px;
+
+            border-radius: 8px;
+
+            background:
+                rgba(40,199,255,.08);
+
+            color: #28c7ff;
+
+            font-size: 10px;
+        }
+
+        .no-result {
+            display: none;
+
+            padding: 25px;
+
+            text-align: center;
+
+            color: #8e9bb2;
+
+            border:
+                1px solid
+                rgba(255,255,255,.06);
+
+            border-radius: 16px;
+        }
+
+        @media (max-width: 650px) {
+
+            .terms-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="terms-page">
+
+
+    <!-- HEADER -->
+
+    <header class="terms-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Banker Mode
+        </button>
+
+
+        <span class="eyebrow">
+            NEO BANKER TOOL
+        </span>
+
+
+        <h1>
+            Banking <span>Terms</span>
+        </h1>
+
+
+        <p>
+            Search common banking, lending,
+            KYC and operational terms with
+            simple explanations.
+        </p>
+
+    </header>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <input
+            id="search"
+            type="search"
+            placeholder="Search terms... e.g. NPA, DPD, KYC"
+            oninput="searchTerms()"
+        >
+
+    </div>
+
+
+    <!-- TERMS -->
+
+    <div
+        id="termsGrid"
+        class="terms-grid"
+    >
+
+
+        <div
+            class="term-card"
+            data-term="KYC know your customer customer verification"
+        >
+
+            <h3>
+                KYC
+            </h3>
+
+            <p>
+                Know Your Customer. It refers to
+                procedures used to verify and
+                establish a customer's identity.
+            </p>
+
+            <span class="category">
+                COMPLIANCE
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="CKYC central know your customer"
+        >
+
+            <h3>
+                CKYC
+            </h3>
+
+            <p>
+                Central KYC is a centralized
+                repository for KYC records,
+                subject to applicable regulations.
+            </p>
+
+            <span class="category">
+                KYC
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="DPD days past due overdue"
+        >
+
+            <h3>
+                DPD
+            </h3>
+
+            <p>
+                Days Past Due. It indicates the
+                number of days a payment remains
+                overdue after its due date.
+            </p>
+
+            <span class="category">
+                LOAN
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="NPA non performing asset loan"
+        >
+
+            <h3>
+                NPA
+            </h3>
+
+            <p>
+                Non-Performing Asset. A loan or
+                advance classified as non-performing
+                under applicable regulatory norms.
+            </p>
+
+            <span class="category">
+                LOAN
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="EMI equated monthly installment"
+        >
+
+            <h3>
+                EMI
+            </h3>
+
+            <p>
+                Equated Monthly Instalment.
+                A scheduled periodic payment
+                towards a loan.
+            </p>
+
+            <span class="category">
+                LOAN
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="CRL credit risk lending"
+        >
+
+            <h3>
+                CRL
+            </h3>
+
+            <p>
+                CRL can have different meanings
+                depending on the institution and
+                banking system. Always verify the
+                internal definition used by your bank.
+            </p>
+
+            <span class="category">
+                OPERATIONS
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="AML anti money laundering"
+        >
+
+            <h3>
+                AML
+            </h3>
+
+            <p>
+                Anti-Money Laundering. Controls
+                designed to detect and prevent
+                money laundering activities.
+            </p>
+
+            <span class="category">
+                COMPLIANCE
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="PMLA prevention money laundering act"
+        >
+
+            <h3>
+                PMLA
+            </h3>
+
+            <p>
+                Prevention of Money Laundering Act,
+                the Indian legal framework addressing
+                money laundering and related matters.
+            </p>
+
+            <span class="category">
+                COMPLIANCE
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="OTS one time settlement"
+        >
+
+            <h3>
+                OTS
+            </h3>
+
+            <p>
+                One Time Settlement. A settlement
+                arrangement offered under applicable
+                institutional policy and approval.
+            </p>
+
+            <span class="category">
+                RECOVERY
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="JLG joint liability group microfinance"
+        >
+
+            <h3>
+                JLG
+            </h3>
+
+            <p>
+                Joint Liability Group. A group-based
+                lending structure commonly used in
+                certain microfinance models.
+            </p>
+
+            <span class="category">
+                MICROFINANCE
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="KYC eKYC electronic"
+        >
+
+            <h3>
+                e-KYC
+            </h3>
+
+            <p>
+                Electronic KYC. A digital process
+                for completing identity verification
+                using permitted electronic methods.
+            </p>
+
+            <span class="category">
+                DIGITAL
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="UAN universal account number EPF"
+        >
+
+            <h3>
+                UAN
+            </h3>
+
+            <p>
+                Universal Account Number associated
+                with an employee's EPF records.
+            </p>
+
+            <span class="category">
+                PAYROLL
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="CBS core banking system"
+        >
+
+            <h3>
+                CBS
+            </h3>
+
+            <p>
+                Core Banking System. The central
+                technology platform used to support
+                banking operations and transactions.
+            </p>
+
+            <span class="category">
+                TECHNOLOGY
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="NACH mandate payment"
+        >
+
+            <h3>
+                NACH
+            </h3>
+
+            <p>
+                National Automated Clearing House.
+                An electronic payment and collection
+                framework operated under applicable
+                rules.
+            </p>
+
+            <span class="category">
+                PAYMENTS
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="IFSC indian financial system code"
+        >
+
+            <h3>
+                IFSC
+            </h3>
+
+            <p>
+                Indian Financial System Code.
+                A unique code used to identify a
+                bank branch for electronic payments.
+            </p>
+
+            <span class="category">
+                PAYMENTS
+            </span>
+
+        </div>
+
+
+        <div
+            class="term-card"
+            data-term="MICR magnetic ink character recognition"
+        >
+
+            <h3>
+                MICR
+            </h3>
+
+            <p>
+                Magnetic Ink Character Recognition.
+                It is used in processing and identifying
+                certain banking instruments.
+            </p>
+
+            <span class="category">
+                PAYMENTS
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <div
+        id="noResult"
+        class="no-result"
+    >
+        No matching banking term found.
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+    /* ==============================
+       SEARCH TERMS
+    ============================== */
+
+    function searchTerms() {
+
+        const query =
+            document.getElementById(
+                "search"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+
+        const cards =
+            document.querySelectorAll(
+                ".term-card"
+            );
+
+
+        let visible =
+            0;
+
+
+        cards.forEach(
+            card => {
+
+                const text =
+                    (
+                        card.dataset.term +
+                        " " +
+                        card.innerText
+                    )
+                    .toLowerCase();
+
+
+                if (
+                    text.includes(query)
+                ) {
+
+                    card.style.display =
+                        "block";
+
+                    visible++;
+
+                } else {
+
+                    card.style.display =
+                        "none";
+
+                }
+
+            }
+        );
+
+
+        document.getElementById(
+            "noResult"
+        ).style.display =
+            visible === 0
+                ? "block"
+                : "none";
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "banker.html";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
