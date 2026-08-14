@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | EMI Calculator</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .emi-page {
+            width: min(850px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .emi-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .emi-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .emi-header h1 span {
+            color: #28c7ff;
+        }
+
+        .emi-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .calculator-card {
+            padding: 25px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+            border: 1px solid rgba(80,180,255,.18);
+            border-radius: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e5;
+            font-size: 13px;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 52px;
+            padding: 0 15px;
+            border: 1px solid rgba(80,180,255,.18);
+            border-radius: 13px;
+            outline: none;
+            background: rgba(0,0,0,.25);
+            color: white;
+            font-size: 16px;
+        }
+
+        .input-group input:focus {
+            border-color: #28c7ff;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            height: 52px;
+            margin-top: 5px;
+            border: 0;
+            border-radius: 13px;
+            background: #28c7ff;
+            color: #00121a;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .result-card {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .result-card.active {
+            display: block;
+        }
+
+        .main-result {
+            padding: 25px;
+            text-align: center;
+            background:
+                rgba(40,199,255,.08);
+            border: 1px solid rgba(40,199,255,.25);
+            border-radius: 20px;
+        }
+
+        .main-result span {
+            color: #8e9bb2;
+            font-size: 12px;
+        }
+
+        .main-result h2 {
+            margin-top: 8px;
+            color: #28c7ff;
+            font-size: 38px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .result-item {
+            padding: 18px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 15px;
+        }
+
+        .result-item span {
+            display: block;
+            color: #8e9bb2;
+            font-size: 11px;
+        }
+
+        .result-item strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 17px;
+        }
+
+        .error {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            color: #ff8f8f;
+            background: rgba(255,70,70,.08);
+            border: 1px solid rgba(255,70,70,.15);
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calculator-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="emi-page">
+
+
+        <!-- HEADER -->
+
+        <header class="emi-header">
+
+            <button
+                class="back-btn"
+                onclick="history.back()"
+            >
+                ← Back to Banker Mode
+            </button>
+
+            <span class="eyebrow">
+                NEO BANKER TOOL
+            </span>
+
+            <h1>
+                EMI <span>Calculator</span>
+            </h1>
+
+            <p>
+                Calculate monthly EMI, total interest
+                and total repayment amount instantly.
+            </p>
+
+        </header>
+
+
+        <!-- CALCULATOR -->
+
+        <section class="calculator-card">
+
+
+            <div class="input-group">
+
+                <label for="loanAmount">
+                    Loan Amount (₹)
+                </label>
+
+                <input
+                    id="loanAmount"
+                    type="number"
+                    inputmode="decimal"
+                    placeholder="Example: 500000"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label for="interestRate">
+                    Annual Interest Rate (%)
+                </label>
+
+                <input
+                    id="interestRate"
+                    type="number"
+                    inputmode="decimal"
+                    step="0.01"
+                    placeholder="Example: 12"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label for="tenure">
+                    Loan Tenure (Months)
+                </label>
+
+                <input
+                    id="tenure"
+                    type="number"
+                    inputmode="numeric"
+                    placeholder="Example: 60"
+                >
+
+            </div>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculateEMI()"
+            >
+                Calculate EMI
+            </button>
+
+
+            <div
+                id="error"
+                class="error"
+            ></div>
+
+
+            <!-- RESULTS -->
+
+            <div
+                id="result"
+                class="result-card"
+            >
+
+                <div class="main-result">
+
+                    <span>
+                        MONTHLY EMI
+                    </span>
+
+                    <h2 id="emi">
+                        ₹0
+                    </h2>
+
+                </div>
+
+
+                <div class="result-grid">
+
+                    <div class="result-item">
+
+                        <span>
+                            LOAN AMOUNT
+                        </span>
+
+                        <strong id="principal">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            TOTAL INTEREST
+                        </span>
+
+                        <strong id="interest">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            TOTAL PAYMENT
+                        </span>
+
+                        <strong id="total">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script>
+
+        function formatRupees(value) {
+
+            return new Intl.NumberFormat(
+                "en-IN",
+                {
+                    style: "currency",
+                    currency: "INR",
+                    maximumFractionDigits: 2
+                }
+            ).format(value);
+
+        }
+
+
+        function calculateEMI() {
+
+            const amount =
+                Number(
+                    document.getElementById(
+                        "loanAmount"
+                    ).value
+                );
+
+
+            const annualRate =
+                Number(
+                    document.getElementById(
+                        "interestRate"
+                    ).value
+                );
+
+
+            const months =
+                Number(
+                    document.getElementById(
+                        "tenure"
+                    ).value
+                );
+
+
+            const error =
+                document.getElementById(
+                    "error"
+                );
+
+
+            const result =
+                document.getElementById(
+                    "result"
+                );
+
+
+            error.style.display = "none";
+            result.classList.remove("active");
+
+
+            if (
+                !amount ||
+                amount <= 0
+            ) {
+
+                showError(
+                    "Please enter a valid loan amount."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                annualRate < 0 ||
+                annualRate > 100
+            ) {
+
+                showError(
+                    "Please enter a valid interest rate between 0 and 100."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                !months ||
+                months <= 0
+            ) {
+
+                showError(
+                    "Please enter a valid loan tenure."
+                );
+
+                return;
+
+            }
+
+
+            const monthlyRate =
+                annualRate / 12 / 100;
+
+
+            let emi;
+
+
+            if (
+                monthlyRate === 0
+            ) {
+
+                emi =
+                    amount / months;
+
+            } else {
+
+                const factor =
+                    Math.pow(
+                        1 + monthlyRate,
+                        months
+                    );
+
+
+                emi =
+                    amount *
+                    monthlyRate *
+                    factor /
+                    (factor - 1);
+
+            }
+
+
+            const totalPayment =
+                emi * months;
+
+
+            const totalInterest =
+                totalPayment - amount;
+
+
+            document.getElementById(
+                "emi"
+            ).textContent =
+                formatRupees(emi);
+
+
+            document.getElementById(
+                "principal"
+            ).textContent =
+                formatRupees(amount);
+
+
+            document.getElementById(
+                "interest"
+            ).textContent =
+                formatRupees(totalInterest);
+
+
+            document.getElementById(
+                "total"
+            ).textContent =
+                formatRupees(totalPayment);
+
+
+            result.classList.add(
+                "active"
+            );
+
+        }
+
+
+        function showError(message) {
+
+            const error =
+                document.getElementById(
+                    "error"
+                );
+
+            error.textContent =
+                message;
+
+            error.style.display =
+                "block";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
