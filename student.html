@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050811">
+    <title>NEO | Student Mode</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .student-page {
+            width: min(1100px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .student-header {
+            padding: 30px 0 20px;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .student-header h1 {
+            font-size: clamp(34px, 7vw, 58px);
+            margin-top: 10px;
+        }
+
+        .student-header h1 span {
+            color: #28c7ff;
+        }
+
+        .student-header p {
+            color: #8e9bb2;
+            max-width: 650px;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .student-card {
+            padding: 24px;
+            min-height: 190px;
+            text-align: left;
+            color: #f4f8ff;
+            background: rgba(13,21,38,.78);
+            border: 1px solid rgba(80,180,255,.18);
+            border-radius: 22px;
+            transition: .25s;
+        }
+
+        .student-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(40,199,255,.5);
+        }
+
+        .student-card .card-icon {
+            font-size: 30px;
+        }
+
+        .student-card h3 {
+            margin-top: 18px;
+            font-size: 20px;
+        }
+
+        .student-card p {
+            margin-top: 8px;
+            color: #8e9bb2;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .student-card .open {
+            display: inline-block;
+            margin-top: 15px;
+            color: #28c7ff;
+            font-size: 13px;
+        }
+
+        .goal-card {
+            margin-top: 20px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(18,31,54,.9), rgba(8,13,25,.9));
+            border: 1px solid rgba(80,180,255,.18);
+            border-radius: 22px;
+        }
+
+        .goal-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .goal-top span {
+            color: #28c7ff;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+        }
+
+        .progress {
+            height: 10px;
+            margin-top: 18px;
+            overflow: hidden;
+            border-radius: 20px;
+            background: rgba(255,255,255,.06);
+        }
+
+        .progress span {
+            display: block;
+            width: 35%;
+            height: 100%;
+            background: #28c7ff;
+            border-radius: inherit;
+        }
+
+        @media (max-width: 650px) {
+            .student-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="student-page">
+
+        <header class="student-header">
+
+            <button class="back-btn" onclick="history.back()">
+                ← Back to NEO
+            </button>
+
+            <span class="eyebrow">NEO STUDENT MODE</span>
+
+            <h1>
+                Learn smarter with <span>NEO</span>
+            </h1>
+
+            <p>
+                Your personal study workspace for learning,
+                exams, practice, career preparation and progress.
+            </p>
+
+        </header>
+
+
+        <section class="goal-card">
+
+            <div class="goal-top">
+                <div>
+                    <span>TODAY'S GOAL</span>
+                    <h2>Study Progress</h2>
+                </div>
+
+                <strong>35%</strong>
+            </div>
+
+            <div class="progress">
+                <span></span>
+            </div>
+
+        </section>
+
+
+        <section class="student-grid">
+
+            <button class="student-card" onclick="openStudentAI()">
+                <div class="card-icon">✦</div>
+                <h3>AI Study Assistant</h3>
+                <p>
+                    Ask questions, understand difficult topics
+                    and get simple explanations.
+                </p>
+                <span class="open">Open →</span>
+            </button>
+
+
+            <button class="student-card" onclick="studentComingSoon('Notes Maker')">
+                <div class="card-icon">📝</div>
+                <h3>Notes Maker</h3>
+                <p>
+                    Create structured notes from topics,
+                    text and study material.
+                </p>
+                <span class="open">Open →</span>
+            </button>
+
+
+            <button class="student-card" onclick="studentComingSoon('Quiz Generator')">
+                <div class="card-icon">🧠</div>
+                <h3>Quiz Generator</h3>
+                <p>
+                    Generate practice questions and test
+                    your knowledge.
+                </p>
+                <span class="open">Open →</span>
+            </button>
+
+
+            <button class="student-card" onclick="studentComingSoon('Exam Preparation')">
+                <div class="card-icon">🎯</div>
+                <h3>Exam Preparation</h3>
+                <p>
+                    Build a preparation plan for your
+                    target examination.
+                </p>
+                <span class="open">Open →</span>
+            </button>
+
+
+            <button class="student-card" onclick="studentComingSoon('Study Timer')">
+                <div class="card-icon">⏱️</div>
+                <h3>Study Timer</h3>
+                <p>
+                    Focus with timed study sessions and
+                    track your practice.
+                </p>
+                <span class="open">Open →</span>
+            </button>
+
+
+            <button class="student-card" onclick="studentComingSoon('Career Tools')">
+                <div class="card-icon">💼</div>
+                <h3>Career Tools</h3>
+                <p>
+                    Resume, interview preparation and
+                    career skill planning.
+                </p>
+                <span class="open">Open →</span>
+            </button>
+
+        </section>
+
+    </div>
+
+
+    <div id="studentAI" class="modal">
+
+        <div class="modal-box">
+
+            <button class="close-btn" onclick="closeStudentAI()">×</button>
+
+            <div class="ai-icon">✦</div>
+
+            <h3>NEO Study Assistant</h3>
+
+            <p>
+                Ask NEO to explain a topic in simple language.
+            </p>
+
+            <input
+                id="studentQuestion"
+                type="text"
+                placeholder="Example: Explain photosynthesis..."
+            >
+
+            <button class="primary-btn" onclick="askStudentAI()">
+                Ask NEO
+            </button>
+
+            <div id="studentAnswer"></div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function openStudentAI() {
+            document.getElementById("studentAI").classList.add("active");
+        }
+
+        function closeStudentAI() {
+            document.getElementById("studentAI").classList.remove("active");
+        }
+
+        function askStudentAI() {
+
+            const input = document.getElementById("studentQuestion");
+            const answer = document.getElementById("studentAnswer");
+
+            const question = input.value.trim();
+
+            if (!question) {
+                answer.innerHTML = "<p>Please enter a topic first.</p>";
+                return;
+            }
+
+            answer.innerHTML = `
+                <p>
+                    <strong>You:</strong>
+                    ${escapeHTML(question)}
+                </p>
+
+                <p>
+                    <strong>NEO:</strong>
+                    The AI study engine will be connected in the
+                    next stage. Your Student Mode interface is ready.
+                </p>
+            `;
+
+            input.value = "";
+        }
+
+        function studentComingSoon(feature) {
+            alert(
+                feature +
+                " will be connected in the next Student Mode update."
+            );
+        }
+
+        function escapeHTML(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+    </script>
+
+</body>
+</html>
