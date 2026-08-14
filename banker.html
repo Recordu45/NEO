@@ -179,6 +179,14 @@
             margin-top: 10px;
         }
 
+        .tool-count {
+            margin-top: 15px;
+
+            color: #42e6a4;
+
+            font-size: 12px;
+        }
+
         @media (max-width: 650px) {
 
             .banker-grid {
@@ -227,6 +235,11 @@
             branch productivity.
         </p>
 
+
+        <div class="tool-count">
+            ● 8 TOOLS AVAILABLE
+        </div>
+
     </header>
 
 
@@ -249,12 +262,12 @@
     </section>
 
 
-    <!-- BANKER TOOLS -->
+    <!-- TOOLS -->
 
     <section class="banker-grid">
 
 
-        <!-- 1. EMI -->
+        <!-- 1 EMI -->
 
         <button
             class="banker-card working"
@@ -285,7 +298,7 @@
         </button>
 
 
-        <!-- 2. CASH DENOMINATION -->
+        <!-- 2 DENOMINATION -->
 
         <button
             class="banker-card working"
@@ -316,7 +329,7 @@
         </button>
 
 
-        <!-- 3. DPD -->
+        <!-- 3 DPD -->
 
         <button
             class="banker-card working"
@@ -347,7 +360,7 @@
         </button>
 
 
-        <!-- 4. LOAN TOOLS -->
+        <!-- 4 LOAN -->
 
         <button
             class="banker-card working"
@@ -378,7 +391,7 @@
         </button>
 
 
-        <!-- 5. EXCEL HELPER -->
+        <!-- 5 EXCEL -->
 
         <button
             class="banker-card working"
@@ -409,7 +422,7 @@
         </button>
 
 
-        <!-- 6. REPORT GENERATOR -->
+        <!-- 6 REPORT -->
 
         <button
             class="banker-card working"
@@ -440,7 +453,7 @@
         </button>
 
 
-        <!-- 7. BANKING TERMS -->
+        <!-- 7 BANKING TERMS -->
 
         <button
             class="banker-card working"
@@ -471,11 +484,11 @@
         </button>
 
 
-        <!-- 8. DAILY BRANCH TASKS -->
+        <!-- 8 DAILY TASKS -->
 
         <button
-            class="banker-card"
-            onclick="comingSoon('Daily Branch Tasks')"
+            class="banker-card working"
+            onclick="openDailyTasks()"
         >
 
             <div class="card-icon">
@@ -487,12 +500,16 @@
             </h3>
 
             <p>
-                Track recurring operational tasks
-                and pending branch work.
+                Track daily branch work,
+                completed tasks and pending work.
             </p>
 
+            <span class="status">
+                ● WORKING
+            </span>
+
             <span class="open">
-                Open →
+                Open Daily Tasks →
             </span>
 
         </button>
@@ -532,7 +549,7 @@
 
 
     /* ==============================
-       CASH DENOMINATION
+       DENOMINATION
     ============================== */
 
     function openDenomination() {
@@ -604,15 +621,13 @@
 
 
     /* ==============================
-       FUTURE TOOLS
+       DAILY TASKS
     ============================== */
 
-    function comingSoon(feature) {
+    function openDailyTasks() {
 
-        alert(
-            feature +
-            " is the next Banker Mode tool."
-        );
+        window.location.href =
+            "daily-tasks.html";
 
     }
 
