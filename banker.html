@@ -1,37 +1,535 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050811">
-<title>NEO | Banker Mode</title>
-<link rel="stylesheet" href="style.css">
-<style>
-.banker-page{width:min(1100px,100%);margin:auto;padding:25px 18px 110px}.banker-header{padding:30px 0 20px}.back-btn{border:1px solid rgba(80,180,255,.18);background:rgba(13,21,38,.78);color:#fff;padding:10px 14px;border-radius:12px;margin-bottom:25px}.banker-header h1{font-size:clamp(34px,7vw,58px);margin-top:10px}.banker-header h1 span{color:#28c7ff}.banker-header p{color:#8e9bb2;max-width:650px;line-height:1.6;margin-top:12px}.banker-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:25px}.banker-card{padding:24px;min-height:190px;text-align:left;color:#f4f8ff;background:rgba(13,21,38,.78);border:1px solid rgba(80,180,255,.18);border-radius:22px;transition:.25s}.banker-card:hover{transform:translateY(-4px);border-color:rgba(40,199,255,.5)}.banker-card .card-icon{font-size:30px}.banker-card h3{margin-top:18px;font-size:20px}.banker-card p{margin-top:8px;color:#8e9bb2;line-height:1.5;font-size:13px}.banker-card .open{display:inline-block;margin-top:15px;color:#28c7ff;font-size:13px}.notice-card{margin-top:20px;padding:24px;background:linear-gradient(135deg,rgba(18,31,54,.9),rgba(8,13,25,.9));border:1px solid rgba(80,180,255,.18);border-radius:22px}.notice-card span{color:#28c7ff;font-size:11px;letter-spacing:1.5px}.notice-card p{color:#8e9bb2;line-height:1.6;margin-top:10px}@media(max-width:650px){.banker-grid{grid-template-columns:1fr}}
-</style>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Banker Mode</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .banker-page {
+            width: min(1100px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .banker-header {
+            padding: 30px 0 20px;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80, 180, 255, 0.18);
+            background: rgba(13, 21, 38, 0.78);
+            color: #fff;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .banker-header h1 {
+            font-size: clamp(34px, 7vw, 58px);
+            margin-top: 10px;
+        }
+
+        .banker-header h1 span {
+            color: #28c7ff;
+        }
+
+        .banker-header p {
+            color: #8e9bb2;
+            max-width: 650px;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .banker-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .banker-card {
+            padding: 24px;
+            min-height: 190px;
+            text-align: left;
+            color: #f4f8ff;
+
+            background:
+                rgba(13, 21, 38, 0.78);
+
+            border:
+                1px solid
+                rgba(80, 180, 255, 0.18);
+
+            border-radius: 22px;
+
+            transition: 0.25s;
+
+            cursor: pointer;
+        }
+
+        .banker-card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(40, 199, 255, 0.5);
+        }
+
+        .banker-card .card-icon {
+            font-size: 30px;
+        }
+
+        .banker-card h3 {
+            margin-top: 18px;
+            font-size: 20px;
+        }
+
+        .banker-card p {
+            margin-top: 8px;
+
+            color: #8e9bb2;
+
+            line-height: 1.5;
+
+            font-size: 13px;
+        }
+
+        .banker-card .open {
+            display: inline-block;
+
+            margin-top: 15px;
+
+            color: #28c7ff;
+
+            font-size: 13px;
+        }
+
+        .notice-card {
+            margin-top: 20px;
+
+            padding: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18, 31, 54, 0.9),
+                    rgba(8, 13, 25, 0.9)
+                );
+
+            border:
+                1px solid
+                rgba(80, 180, 255, 0.18);
+
+            border-radius: 22px;
+        }
+
+        .notice-card span {
+            color: #28c7ff;
+
+            font-size: 11px;
+
+            letter-spacing: 1.5px;
+        }
+
+        .notice-card p {
+            color: #8e9bb2;
+
+            line-height: 1.6;
+
+            margin-top: 10px;
+        }
+
+        .active-tool {
+            border-color:
+                rgba(40, 199, 255, 0.35);
+
+            box-shadow:
+                0 0 25px
+                rgba(40, 199, 255, 0.06);
+        }
+
+        @media (max-width: 650px) {
+
+            .banker-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
-<div class="banker-page">
-<header class="banker-header">
-<button class="back-btn" onclick="history.back()">← Back to NEO</button>
-<span class="eyebrow">NEO BANKER MODE</span>
-<h1>Work smarter with <span>NEO</span></h1>
-<p>Your banking workspace for calculations, Excel, reports, loan tools and daily branch productivity.</p>
-</header>
-<section class="notice-card"><span>BANKER TOOLKIT</span><p>Use NEO for quick branch calculations and workflow support. Banking policy or transaction decisions must always follow your institution's approved procedures.</p></section>
-<section class="banker-grid">
-<button class="banker-card" onclick="bankerComingSoon('EMI Calculator')"><div class="card-icon">🧮</div><h3>EMI Calculator</h3><p>Calculate EMI, total interest and repayment amount quickly.</p><span class="open">Open →</span></button>
-<button class="banker-card" onclick="bankerComingSoon('Cash Denomination')"><div class="card-icon">💵</div><h3>Cash Denomination</h3><p>Break down cash amounts into available note denominations.</p><span class="open">Open →</span></button>
-<button class="banker-card" onclick="bankerComingSoon('DPD Calculator')"><div class="card-icon">📅</div><h3>DPD Calculator</h3><p>Calculate days past due from relevant dates for operational review.</p><span class="open">Open →</span></button>
-<button class="banker-card" onclick="bankerComingSoon('Loan Tools')"><div class="card-icon">🏦</div><h3>Loan Tools</h3><p>Quick loan, interest and repayment utilities for branch work.</p><span class="open">Open →</span></button>
-<button class="banker-card" onclick="bankerComingSoon('Excel Helper')"><div class="card-icon">📊</div><h3>Excel Helper</h3><p>Formulas, lookups, pivots and reporting assistance.</p><span class="open">Open →</span></button>
-<button class="banker-card" onclick="bankerComingSoon('Report Generator')"><div class="card-icon">📝</div><h3>Report Generator</h3><p>Turn branch notes and inputs into structured reports.</p><span class="open">Open →</span></button>
-<button class="banker-card" onclick="bankerComingSoon('Banking Terms')"><div class="card-icon">📚</div><h3>Banking Terms</h3><p>Simple explanations for banking, lending and compliance concepts.</p><span class="open">Open →</span></button>
-<button class="banker-card" onclick="bankerComingSoon('Daily Tasks')"><div class="card-icon">✅</div><h3>Daily Branch Tasks</h3><p>Track recurring operational tasks and pending work.</p><span class="open">Open →</span></button>
-</section>
-</div>
-<script>
-function bankerComingSoon(feature){alert(feature + " will be connected in the next Banker Mode update.");}
-</script>
+
+
+    <div class="banker-page">
+
+
+        <!-- HEADER -->
+
+        <header class="banker-header">
+
+            <button
+                class="back-btn"
+                onclick="goBack()"
+            >
+                ← Back to NEO
+            </button>
+
+
+            <span class="eyebrow">
+                NEO BANKER MODE
+            </span>
+
+
+            <h1>
+                Work smarter with
+                <span>NEO</span>
+            </h1>
+
+
+            <p>
+                Your banking workspace for calculations,
+                Excel, reports, loan tools and daily
+                branch productivity.
+            </p>
+
+        </header>
+
+
+        <!-- NOTICE -->
+
+        <section class="notice-card">
+
+            <span>
+                BANKER TOOLKIT
+            </span>
+
+            <p>
+                Use NEO for quick branch calculations
+                and workflow support. Banking policy
+                or transaction decisions must always
+                follow your institution's approved
+                procedures.
+            </p>
+
+        </section>
+
+
+        <!-- TOOLS -->
+
+        <section class="banker-grid">
+
+
+            <!-- EMI CALCULATOR -->
+
+            <button
+                class="banker-card active-tool"
+                onclick="openEMI()"
+            >
+
+                <div class="card-icon">
+                    🧮
+                </div>
+
+
+                <h3>
+                    EMI Calculator
+                </h3>
+
+
+                <p>
+                    Calculate monthly EMI, total
+                    interest and total repayment.
+                </p>
+
+
+                <span class="open">
+                    Open Calculator →
+                </span>
+
+            </button>
+
+
+            <!-- CASH DENOMINATION -->
+
+            <button
+                class="banker-card"
+                onclick="comingSoon('Cash Denomination')"
+            >
+
+                <div class="card-icon">
+                    💵
+                </div>
+
+
+                <h3>
+                    Cash Denomination
+                </h3>
+
+
+                <p>
+                    Break down cash amounts into
+                    available note denominations.
+                </p>
+
+
+                <span class="open">
+                    Open →
+                </span>
+
+            </button>
+
+
+            <!-- DPD -->
+
+            <button
+                class="banker-card"
+                onclick="comingSoon('DPD Calculator')"
+            >
+
+                <div class="card-icon">
+                    📅
+                </div>
+
+
+                <h3>
+                    DPD Calculator
+                </h3>
+
+
+                <p>
+                    Calculate days past due from
+                    relevant dates.
+                </p>
+
+
+                <span class="open">
+                    Open →
+                </span>
+
+            </button>
+
+
+            <!-- LOAN TOOLS -->
+
+            <button
+                class="banker-card"
+                onclick="comingSoon('Loan Tools')"
+            >
+
+                <div class="card-icon">
+                    🏦
+                </div>
+
+
+                <h3>
+                    Loan Tools
+                </h3>
+
+
+                <p>
+                    Quick loan, interest and repayment
+                    utilities for branch work.
+                </p>
+
+
+                <span class="open">
+                    Open →
+                </span>
+
+            </button>
+
+
+            <!-- EXCEL -->
+
+            <button
+                class="banker-card"
+                onclick="comingSoon('Excel Helper')"
+            >
+
+                <div class="card-icon">
+                    📊
+                </div>
+
+
+                <h3>
+                    Excel Helper
+                </h3>
+
+
+                <p>
+                    Formulas, lookups, pivots and
+                    reporting assistance.
+                </p>
+
+
+                <span class="open">
+                    Open →
+                </span>
+
+            </button>
+
+
+            <!-- REPORT -->
+
+            <button
+                class="banker-card"
+                onclick="comingSoon('Report Generator')"
+            >
+
+                <div class="card-icon">
+                    📝
+                </div>
+
+
+                <h3>
+                    Report Generator
+                </h3>
+
+
+                <p>
+                    Turn branch notes and inputs
+                    into structured reports.
+                </p>
+
+
+                <span class="open">
+                    Open →
+                </span>
+
+            </button>
+
+
+            <!-- BANKING TERMS -->
+
+            <button
+                class="banker-card"
+                onclick="comingSoon('Banking Terms')"
+            >
+
+                <div class="card-icon">
+                    📚
+                </div>
+
+
+                <h3>
+                    Banking Terms
+                </h3>
+
+
+                <p>
+                    Simple explanations for banking,
+                    lending and compliance concepts.
+                </p>
+
+
+                <span class="open">
+                    Open →
+                </span>
+
+            </button>
+
+
+            <!-- DAILY TASKS -->
+
+            <button
+                class="banker-card"
+                onclick="comingSoon('Daily Branch Tasks')"
+            >
+
+                <div class="card-icon">
+                    ✅
+                </div>
+
+
+                <h3>
+                    Daily Branch Tasks
+                </h3>
+
+
+                <p>
+                    Track recurring operational tasks
+                    and pending work.
+                </p>
+
+
+                <span class="open">
+                    Open →
+                </span>
+
+            </button>
+
+
+        </section>
+
+
+    </div>
+
+
+    <script>
+
+
+        /* ==============================
+           EMI
+        ============================== */
+
+        function openEMI() {
+
+            window.location.href = "emi.html";
+
+        }
+
+
+        /* ==============================
+           BACK
+        ============================== */
+
+        function goBack() {
+
+            window.location.href = "index.html";
+
+        }
+
+
+        /* ==============================
+           COMING SOON
+        ============================== */
+
+        function comingSoon(feature) {
+
+            alert(
+                feature +
+                " is the next tool we will make fully functional."
+            );
+
+        }
+
+
+    </script>
+
+
 </body>
+
 </html>
