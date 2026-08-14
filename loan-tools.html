@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#050811"
+    >
+
+    <title>NEO | Loan Tools</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .loan-page {
+            width: min(900px, 100%);
+            margin: auto;
+            padding: 25px 18px 110px;
+        }
+
+        .loan-header {
+            padding: 30px 0;
+        }
+
+        .back-btn {
+            border: 1px solid rgba(80,180,255,.18);
+            background: rgba(13,21,38,.78);
+            color: white;
+            padding: 11px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .loan-header h1 {
+            font-size: clamp(38px, 8vw, 62px);
+            margin-top: 12px;
+        }
+
+        .loan-header h1 span {
+            color: #28c7ff;
+        }
+
+        .loan-header p {
+            color: #8e9bb2;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .calculator-card {
+            padding: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18,31,54,.95),
+                    rgba(8,13,25,.95)
+                );
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e5;
+            font-size: 13px;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 52px;
+            padding: 0 15px;
+
+            border:
+                1px solid
+                rgba(80,180,255,.18);
+
+            border-radius: 13px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,.25);
+
+            color: white;
+
+            font-size: 16px;
+        }
+
+        .input-group input:focus {
+            border-color: #28c7ff;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            height: 52px;
+            margin-top: 5px;
+
+            border: 0;
+
+            border-radius: 13px;
+
+            background: #28c7ff;
+
+            color: #00121a;
+
+            font-weight: 800;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        .results {
+            display: none;
+            margin-top: 22px;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .main-result {
+            padding: 25px;
+            text-align: center;
+
+            background:
+                rgba(40,199,255,.08);
+
+            border:
+                1px solid
+                rgba(40,199,255,.2);
+
+            border-radius: 20px;
+        }
+
+        .main-result span {
+            color: #8e9bb2;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .main-result h2 {
+            margin-top: 9px;
+            color: #28c7ff;
+            font-size: 40px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .result-item {
+            padding: 18px;
+
+            background:
+                rgba(255,255,255,.03);
+
+            border:
+                1px solid
+                rgba(255,255,255,.06);
+
+            border-radius: 15px;
+        }
+
+        .result-item span {
+            display: block;
+            color: #8e9bb2;
+            font-size: 11px;
+        }
+
+        .result-item strong {
+            display: block;
+            margin-top: 8px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .breakdown {
+            margin-top: 20px;
+        }
+
+        .breakdown h3 {
+            margin-bottom: 12px;
+        }
+
+        .bar {
+            height: 18px;
+            display: flex;
+            overflow: hidden;
+            border-radius: 20px;
+            background: rgba(255,255,255,.05);
+        }
+
+        .principal-bar {
+            width: 50%;
+            background: #28c7ff;
+        }
+
+        .interest-bar {
+            width: 50%;
+            background: #5b7cff;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #8e9bb2;
+            font-size: 12px;
+        }
+
+        .error {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+
+            color: #ff9b9b;
+
+            background:
+                rgba(255,70,70,.08);
+
+            border:
+                1px solid
+                rgba(255,70,70,.15);
+
+            border-radius: 12px;
+
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calculator-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="loan-page">
+
+
+    <!-- HEADER -->
+
+    <header class="loan-header">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back to Banker Mode
+        </button>
+
+
+        <span class="eyebrow">
+            NEO BANKER TOOL
+        </span>
+
+
+        <h1>
+            Loan <span>Tools</span>
+        </h1>
+
+
+        <p>
+            Calculate EMI, total interest,
+            repayment amount and principal
+            versus interest breakdown.
+        </p>
+
+    </header>
+
+
+    <!-- CALCULATOR -->
+
+    <section class="calculator-card">
+
+
+        <div class="input-group">
+
+            <label for="loanAmount">
+                Loan Amount (₹)
+            </label>
+
+            <input
+                id="loanAmount"
+                type="number"
+                inputmode="decimal"
+                placeholder="Example: 500000"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="interestRate">
+                Annual Interest Rate (%)
+            </label>
+
+            <input
+                id="interestRate"
+                type="number"
+                inputmode="decimal"
+                step="0.01"
+                placeholder="Example: 12"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label for="tenure">
+                Tenure (Months)
+            </label>
+
+            <input
+                id="tenure"
+                type="number"
+                inputmode="numeric"
+                placeholder="Example: 60"
+            >
+
+        </div>
+
+
+        <button
+            class="calculate-btn"
+            onclick="calculateLoan()"
+        >
+            Calculate Loan
+        </button>
+
+
+        <div
+            id="error"
+            class="error"
+        ></div>
+
+
+        <!-- RESULTS -->
+
+        <div
+            id="results"
+            class="results"
+        >
+
+
+            <div class="main-result">
+
+                <span>
+                    MONTHLY EMI
+                </span>
+
+                <h2 id="emi">
+                    ₹0
+                </h2>
+
+            </div>
+
+
+            <div class="result-grid">
+
+
+                <div class="result-item">
+
+                    <span>
+                        PRINCIPAL
+                    </span>
+
+                    <strong id="principal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        TOTAL INTEREST
+                    </span>
+
+                    <strong id="interest">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        TOTAL PAYMENT
+                    </span>
+
+                    <strong id="totalPayment">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        TENURE
+                    </span>
+
+                    <strong id="tenureResult">
+                        0 Months
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- BREAKDOWN -->
+
+            <div class="breakdown">
+
+                <h3>
+                    Principal vs Interest
+                </h3>
+
+
+                <div class="bar">
+
+                    <div
+                        id="principalBar"
+                        class="principal-bar"
+                    ></div>
+
+                    <div
+                        id="interestBar"
+                        class="interest-bar"
+                    ></div>
+
+                </div>
+
+
+                <div class="legend">
+
+                    <span id="principalPercent">
+                        Principal: 0%
+                    </span>
+
+                    <span id="interestPercent">
+                        Interest: 0%
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+
+    /* ==============================
+       FORMAT RUPEES
+    ============================== */
+
+    function formatRupees(value) {
+
+        return new Intl.NumberFormat(
+            "en-IN",
+            {
+                style: "currency",
+                currency: "INR",
+                maximumFractionDigits: 2
+            }
+        ).format(value);
+
+    }
+
+
+    /* ==============================
+       CALCULATE LOAN
+    ============================== */
+
+    function calculateLoan() {
+
+        const amount =
+            Number(
+                document.getElementById(
+                    "loanAmount"
+                ).value
+            );
+
+
+        const annualRate =
+            Number(
+                document.getElementById(
+                    "interestRate"
+                ).value
+            );
+
+
+        const months =
+            Number(
+                document.getElementById(
+                    "tenure"
+                ).value
+            );
+
+
+        const error =
+            document.getElementById(
+                "error"
+            );
+
+
+        const results =
+            document.getElementById(
+                "results"
+            );
+
+
+        error.style.display =
+            "none";
+
+
+        results.classList.remove(
+            "active"
+        );
+
+
+        /* VALIDATION */
+
+        if (
+            !amount ||
+            amount <= 0
+        ) {
+
+            showError(
+                "Please enter a valid loan amount."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            annualRate < 0 ||
+            annualRate > 100
+        ) {
+
+            showError(
+                "Please enter an interest rate between 0 and 100."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !months ||
+            months <= 0
+        ) {
+
+            showError(
+                "Please enter a valid tenure."
+            );
+
+            return;
+
+        }
+
+
+        /* MONTHLY RATE */
+
+        const monthlyRate =
+            annualRate /
+            12 /
+            100;
+
+
+        let emi;
+
+
+        /* ZERO INTEREST */
+
+        if (
+            monthlyRate === 0
+        ) {
+
+            emi =
+                amount /
+                months;
+
+        }
+
+
+        /* NORMAL EMI */
+
+        else {
+
+            const factor =
+                Math.pow(
+                    1 + monthlyRate,
+                    months
+                );
+
+
+            emi =
+                amount *
+                monthlyRate *
+                factor /
+                (factor - 1);
+
+        }
+
+
+        const totalPayment =
+            emi *
+            months;
+
+
+        const totalInterest =
+            totalPayment -
+            amount;
+
+
+        /* PERCENTAGES */
+
+        const principalPercentage =
+            (
+                amount /
+                totalPayment
+            ) * 100;
+
+
+        const interestPercentage =
+            (
+                totalInterest /
+                totalPayment
+            ) * 100;
+
+
+        /* DISPLAY */
+
+        document.getElementById(
+            "emi"
+        ).textContent =
+            formatRupees(
+                emi
+            );
+
+
+        document.getElementById(
+            "principal"
+        ).textContent =
+            formatRupees(
+                amount
+            );
+
+
+        document.getElementById(
+            "interest"
+        ).textContent =
+            formatRupees(
+                totalInterest
+            );
+
+
+        document.getElementById(
+            "totalPayment"
+        ).textContent =
+            formatRupees(
+                totalPayment
+            );
+
+
+        document.getElementById(
+            "tenureResult"
+        ).textContent =
+            months +
+            " Months";
+
+
+        /* BAR */
+
+        document.getElementById(
+            "principalBar"
+        ).style.width =
+            principalPercentage +
+            "%";
+
+
+        document.getElementById(
+            "interestBar"
+        ).style.width =
+            interestPercentage +
+            "%";
+
+
+        document.getElementById(
+            "principalPercent"
+        ).textContent =
+            "Principal: " +
+            principalPercentage.toFixed(1) +
+            "%";
+
+
+        document.getElementById(
+            "interestPercent"
+        ).textContent =
+            "Interest: " +
+            interestPercentage.toFixed(1) +
+            "%";
+
+
+        results.classList.add(
+            "active"
+        );
+
+    }
+
+
+    /* ==============================
+       ERROR
+    ============================== */
+
+    function showError(message) {
+
+        const error =
+            document.getElementById(
+                "error"
+            );
+
+
+        error.textContent =
+            message;
+
+
+        error.style.display =
+            "block";
+
+    }
+
+
+    /* ==============================
+       BACK
+    ============================== */
+
+    function goBack() {
+
+        window.location.href =
+            "banker.html";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
