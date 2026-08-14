@@ -349,8 +349,8 @@
         <!-- LOAN TOOLS -->
 
         <button
-            class="banker-card"
-            onclick="comingSoon('Loan Tools')"
+            class="banker-card working"
+            onclick="openLoanTools()"
         >
 
             <div class="card-icon">
@@ -362,12 +362,16 @@
             </h3>
 
             <p>
-                Quick loan, interest and repayment
-                utilities for branch work.
+                Calculate EMI, total interest,
+                repayment and loan breakdown.
             </p>
 
+            <span class="status">
+                ● WORKING
+            </span>
+
             <span class="open">
-                Open →
+                Open Loan Tools →
             </span>
 
         </button>
@@ -534,6 +538,18 @@
 
         window.location.href =
             "dpd.html";
+
+    }
+
+
+    /* ==============================
+       LOAN TOOLS
+    ============================== */
+
+    function openLoanTools() {
+
+        window.location.href =
+            "loan-tools.html";
 
     }
 
